@@ -30,25 +30,46 @@ struct __declspec(uuid("b7fa0e54-41d7-4161-81d6-3036900cfc80")) IAudioGraphCallb
 	** HRESULT that was provided by the Windows API when the error occurred. Note that this must be implemented. */
 	virtual VOID STDMETHODCALLTYPE OnObjectFailure(LPCWSTR File, UINT Line, HRESULT hr) PURE;
 
+	/* OnTransition() is called when a node is about to finish playing.  The implementation of this method should return
+	** the desired trigger string, which identifies which node is to be traveled to next. If no edge
+	** exists connected to the current node with the returned trigger string, OnObjectFailure() will be called. */
 	virtual LPCWSTR STDMETHODCALLTYPE OnTransition(IAudioGraph* pAudioGraph, IAudioGraphNode* pNode) PURE;
 };
 
+/* IAudioGraphEdge represents a directed edge in the audio graph. Associated with it is a trigger, 
+** which is used to identify which particular edge is the path to take when a node is finished playing. */
 struct __declspec(uuid("2a4bee1e-2d02-4f9c-bed9-eaedfb95331d")) IAudioGraphEdge : public IUnknown {
+	/* Returns the ID of this particular edge. */
 	virtual LPCWSTR STDMETHODCALLTYPE GetID() PURE;
 
-	virtual VOID GetFrom(IAudioGraphNode** ppNode) PURE;
+	/* Returns the source node of this particular edge. */
+	virtual VOID STDMETHODCALLTYPE GetFrom(IAudioGraphNode** ppNode) PURE;
 
-	virtual VOID GetTo(IAudioGraphNode** ppNode) PURE;
+	/* Returns the destination node of this particular edge. */
+	virtual VOID STDMETHODCALLTYPE GetTo(IAudioGraphNode** ppNode) PURE;
 
-	virtual LPCWSTR GetTrigger() PURE;
+	/* Returns the trigger string associated with this edge. */
+	virtual LPCWSTR STDMETHODCALLTYPE GetTrigger() PURE;
 };
 
 struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode : public IUnknown {
+	/* Returns the ID of this particular node. */
 	virtual LPCWSTR STDMETHODCALLTYPE GetID() PURE;
 
-	virtual LONG GetNumEdges() PURE;
+	/* Returns the number of edges extending from this particular node. */
+	virtual LONG STDMETHODCALLTYPE GetNumEdges() PURE;
 
-	virtual VOID EnumEdge(LONG EdgeNum, IAudioGraphEdge** ppEdge) PURE;
+	/* Returns an edge extending from this node by given array index. */
+	virtual VOID STDMETHODCALLTYPE EnumEdge(LONG EdgeNum, IAudioGraphEdge** ppEdge) PURE;
+
+	/* Returns the stretch coefficient associated with this particular node. */
+	virtual FLOAT STDMETHODCALLTYPE GetStretch() PURE;
+
+	/* Returns the gain coefficient associated with this particular node. */
+	virtual FLOAT STDMETHODCALLTYPE GetGain() PURE;
+
+	/* Returns the name of the file that this node streams from. */
+	virtual LPCWSTR STDMETHODCALLTYPE GetFilename() PURE;
 };
 
 struct __declspec(uuid("b1f2bb1c-f1da-4f0a-ba3a-b7dbe2a7c824")) IAudioGraph : public IUnknown {
