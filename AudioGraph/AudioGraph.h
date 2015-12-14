@@ -70,6 +70,20 @@ struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode 
 
 	/* Returns the name of the file that this node streams from. */
 	virtual LPCWSTR STDMETHODCALLTYPE GetFilename() PURE;
+
+	/* Returns the offset this node has from the start of the PCM audio data in the
+	** associated file, in samples. */
+	virtual LONG STDMETHODCALLTYPE GetSampleOffset() PURE;
+
+	/* Returns the duration this node will play for, in samples. */
+	virtual LONG STDMETHODCALLTYPE GetSampleDuration() PURE;
+
+	/* Returns the offset this node has from the start of the PCM audio data in the
+	** associated file, in seconds. */
+	virtual FLOAT STDMETHODCALLTYPE GetTimeOffset() PURE;
+
+	/* Returns the duration this node will play for, in seconds. */
+	virtual FLOAT STDMETHODCALLTYPE GetTimeDuration() PURE;
 };
 
 struct __declspec(uuid("b1f2bb1c-f1da-4f0a-ba3a-b7dbe2a7c824")) IAudioGraph : public IUnknown {
