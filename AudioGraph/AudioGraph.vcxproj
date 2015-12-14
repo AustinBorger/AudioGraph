@@ -117,6 +117,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AudioGraph.h" />
+    <ClInclude Include="CAudioGraphFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioGraph.cpp" />
