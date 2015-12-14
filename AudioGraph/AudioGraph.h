@@ -42,14 +42,17 @@ struct __declspec(uuid("2a4bee1e-2d02-4f9c-bed9-eaedfb95331d")) IAudioGraphEdge 
 	/* Returns the ID of this particular edge. */
 	virtual LPCWSTR STDMETHODCALLTYPE GetID() PURE;
 
-	/* Returns the source node of this particular edge. */
+	/* Retrieves the source node of this particular edge. */
 	virtual VOID STDMETHODCALLTYPE GetFrom(IAudioGraphNode** ppNode) PURE;
 
-	/* Returns the destination node of this particular edge. */
+	/* Retrieves the destination node of this particular edge. */
 	virtual VOID STDMETHODCALLTYPE GetTo(IAudioGraphNode** ppNode) PURE;
 
 	/* Returns the trigger string associated with this edge. */
 	virtual LPCWSTR STDMETHODCALLTYPE GetTrigger() PURE;
+
+	/* Returns this edge's formatted style string, which was used to create it. */
+	virtual LPCWSTR STDMETHODCALLTYPE GetStyleString() PURE;
 };
 
 struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode : public IUnknown {
@@ -59,8 +62,11 @@ struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode 
 	/* Returns the number of edges extending from this particular node. */
 	virtual LONG STDMETHODCALLTYPE GetNumEdges() PURE;
 
-	/* Returns an edge extending from this node by given array index. */
+	/* Retrieves an edge extending from this node by given array index. */
 	virtual VOID STDMETHODCALLTYPE EnumEdge(LONG EdgeNum, IAudioGraphEdge** ppEdge) PURE;
+
+	/* Retrieves an edge based on a given identifier. */
+	virtual VOID STDMETHODCALLTYPE GetEdgeByID(LPCWSTR ID, IAudioGraphEdge** ppEdge) PURE;
 
 	/* Returns the stretch coefficient associated with this particular node. */
 	virtual FLOAT STDMETHODCALLTYPE GetStretch() PURE;
@@ -84,6 +90,9 @@ struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode 
 
 	/* Returns the duration this node will play for, in seconds. */
 	virtual FLOAT STDMETHODCALLTYPE GetTimeDuration() PURE;
+
+	/* Returns this node's formatted style string, which was used to create it. */
+	virtual LPCWSTR STDMETHODCALLTYPE GetStyleString() PURE;
 };
 
 struct __declspec(uuid("b1f2bb1c-f1da-4f0a-ba3a-b7dbe2a7c824")) IAudioGraph : public IUnknown {
@@ -91,15 +100,27 @@ struct __declspec(uuid("b1f2bb1c-f1da-4f0a-ba3a-b7dbe2a7c824")) IAudioGraph : pu
 
 	virtual VOID STDMETHODCALLTYPE CreateEdge(LPCWSTR Style, IAudioGraphEdge** ppEdge) PURE;
 
+	virtual VOID STDMETHODCALLTYPE RemoveNode(IAudioGraphNode* pNode) PURE;
+
+	virtual VOID STDMETHODCALLTYPE RemoveEdge(IAudioGraphEdge* pEdge) PURE;
+
 	virtual VOID STDMETHODCALLTYPE GetNodeByID(LPCWSTR ID, IAudioGraphNode** ppNode) PURE;
 
 	virtual VOID STDMETHODCALLTYPE GetEdgeByID(LPCWSTR ID, IAudioGraphEdge** ppEdge) PURE;
 };
 
+struct __declspec(uuid("91a4fdda-c694-4c6c-b33e-78a04545eeaa")) IAudioGraphFile : public IUnknown {
+	virtual LONG STDMETHODCALLTYPE GetNumGraphs() PURE;
+
+	virtual VOID STDMETHODCALLTYPE EnumGraph(LONG GraphNum, IAudioGraph** ppAudioGraph) PURE;
+
+	virtual VOID STDMETHODCALLTYPE GetGraphByID(LPCWSTR ID, IAudioGraph** ppAudioGraph) PURE;
+};
+
 /* IAudioGraphFactory provides several APIs to create audio graphs.  It also provides the connection
 ** between the application and the Windows audio service. */
 struct __declspec(uuid("b824c4eb-5a50-4706-8c14-bcc2f207d6ee")) IAudioGraphFactory : public IUnknown {
-	virtual VOID STDMETHODCALLTYPE CreateAudioGraphFromFile(LPCWSTR Filename, IAudioGraph** ppAudioGraph) PURE;
+	virtual VOID STDMETHODCALLTYPE ParseAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) PURE;
 
 	virtual VOID STDMETHODCALLTYPE CreateAudioGraph(IAudioGraph** ppAudioGraph) PURE;
 };
