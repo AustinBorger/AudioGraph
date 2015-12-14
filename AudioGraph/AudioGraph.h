@@ -96,6 +96,14 @@ struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode 
 };
 
 struct __declspec(uuid("b1f2bb1c-f1da-4f0a-ba3a-b7dbe2a7c824")) IAudioGraph : public IUnknown {
+	virtual LPCWSTR STDMETHODCALLTYPE GetID() PURE;
+
+	virtual LPCWSTR STDMETHODCALLTYPE GetType() PURE;
+
+	virtual LPCWSTR STDMETHODCALLTYPE GetStyleString() PURE;
+
+	virtual FLOAT STDMETHODCALLTYPE GetGain() PURE;
+
 	virtual VOID STDMETHODCALLTYPE CreateNode(LPCWSTR Style, IAudioGraphNode** ppNode) PURE;
 
 	virtual VOID STDMETHODCALLTYPE CreateEdge(LPCWSTR Style, IAudioGraphEdge** ppEdge) PURE;
@@ -115,12 +123,20 @@ struct __declspec(uuid("91a4fdda-c694-4c6c-b33e-78a04545eeaa")) IAudioGraphFile 
 	virtual VOID STDMETHODCALLTYPE EnumGraph(LONG GraphNum, IAudioGraph** ppAudioGraph) PURE;
 
 	virtual VOID STDMETHODCALLTYPE GetGraphByID(LPCWSTR ID, IAudioGraph** ppAudioGraph) PURE;
+
+	virtual LPCWSTR STDMETHODCALLTYPE GetFilename() PURE;
+
+	virtual VOID STDMETHODCALLTYPE AppendGraph(IAudioGraph* pAudioGraph) PURE;
+
+	virtual VOID STDMETHODCALLTYPE Save() PURE;
 };
 
 /* IAudioGraphFactory provides several APIs to create audio graphs.  It also provides the connection
-** between the application and the Windows audio service. */
+** between the application and the Windows audio service.  There should be one of these per application. */
 struct __declspec(uuid("b824c4eb-5a50-4706-8c14-bcc2f207d6ee")) IAudioGraphFactory : public IUnknown {
 	virtual VOID STDMETHODCALLTYPE ParseAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) PURE;
+
+	virtual VOID STDMETHODCALLTYPE CreateAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) PURE;
 
 	virtual VOID STDMETHODCALLTYPE CreateAudioGraph(IAudioGraph** ppAudioGraph) PURE;
 };
