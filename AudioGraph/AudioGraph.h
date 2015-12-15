@@ -96,25 +96,47 @@ struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode 
 };
 
 struct __declspec(uuid("b1f2bb1c-f1da-4f0a-ba3a-b7dbe2a7c824")) IAudioGraph : public IUnknown {
+	/* Returns the ID of this particular graph. */
 	virtual LPCWSTR STDMETHODCALLTYPE GetID() PURE;
 
+	/* Returns an arbitrary type string describing this graph. */
 	virtual LPCWSTR STDMETHODCALLTYPE GetType() PURE;
 
+	/* Returns the style string of this graph. */
 	virtual LPCWSTR STDMETHODCALLTYPE GetStyleString() PURE;
 
+	/* Returns the gain of this graph. */
 	virtual FLOAT STDMETHODCALLTYPE GetGain() PURE;
 
+	/* Creates a node that will be associated with this graph.  Style is a string listing the
+	** attributes of the node, in XML syntax. */
 	virtual VOID STDMETHODCALLTYPE CreateNode(LPCWSTR Style, IAudioGraphNode** ppNode) PURE;
 
+	/* Creates an edge that will be associated with this graph.  Style is a string listing the
+	** attributes of the edge, in XML syntax. */
 	virtual VOID STDMETHODCALLTYPE CreateEdge(LPCWSTR Style, IAudioGraphEdge** ppEdge) PURE;
 
+	/* Removes a node associated with this graph.  Note that the application is still
+	** expected to release any references to the node. */
 	virtual VOID STDMETHODCALLTYPE RemoveNode(IAudioGraphNode* pNode) PURE;
 
+	/* Removes an edge associated with this graph.  Note that the application is still
+	** expected to release any references to the edge. */
 	virtual VOID STDMETHODCALLTYPE RemoveEdge(IAudioGraphEdge* pEdge) PURE;
 
+	/* Retrieves a node based on a given node identifier. */
 	virtual VOID STDMETHODCALLTYPE GetNodeByID(LPCWSTR ID, IAudioGraphNode** ppNode) PURE;
 
+	/* Retrieves an edge based on a given edge identifier. */
 	virtual VOID STDMETHODCALLTYPE GetEdgeByID(LPCWSTR ID, IAudioGraphEdge** ppEdge) PURE;
+
+	/* Gets the mix gain of this graph.  The mix gain is used for mixing/fading between different
+	** audio graphs, where multiple graphs are playing concurrently. */
+	virtual FLOAT STDMETHODCALLTYPE GetMixVolume() PURE;
+
+	/* Sets the mix gain of this graph.  The mix gain is used for mixing/fading between different
+	** audio graphs, where multiple graphs are playing concurrently. */
+	virtual VOID STDMETHODCALLTYPE SetMixVolume(FLOAT Volume) PURE;
 };
 
 struct __declspec(uuid("91a4fdda-c694-4c6c-b33e-78a04545eeaa")) IAudioGraphFile : public IUnknown {
@@ -138,7 +160,7 @@ struct __declspec(uuid("b824c4eb-5a50-4706-8c14-bcc2f207d6ee")) IAudioGraphFacto
 
 	virtual VOID STDMETHODCALLTYPE CreateAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) PURE;
 
-	virtual VOID STDMETHODCALLTYPE CreateAudioGraph(IAudioGraph** ppAudioGraph) PURE;
+	virtual VOID STDMETHODCALLTYPE CreateAudioGraph(LPCWSTR Style, IAudioGraph** ppAudioGraph) PURE;
 };
 
 #ifndef _AUDIO_GRAPH_EXPORT_TAG
