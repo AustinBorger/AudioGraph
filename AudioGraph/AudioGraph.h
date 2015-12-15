@@ -175,10 +175,13 @@ struct __declspec(uuid("91a4fdda-c694-4c6c-b33e-78a04545eeaa")) IAudioGraphFile 
 /* IAudioGraphFactory provides several APIs to create audio graphs.  It also provides the connection
 ** between the application and the Windows audio service.  There should be one of these per application. */
 struct __declspec(uuid("b824c4eb-5a50-4706-8c14-bcc2f207d6ee")) IAudioGraphFactory : public IUnknown {
+	/* Parses an XML file defining a set of audio graphs. */
 	virtual VOID STDMETHODCALLTYPE ParseAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) PURE;
 
+	/* Creates a blank XML file defining a set of audio graphs. */
 	virtual VOID STDMETHODCALLTYPE CreateAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) PURE;
 
+	/* Creates a blank audio graph. */
 	virtual VOID STDMETHODCALLTYPE CreateAudioGraph(LPCWSTR Style, IAudioGraph** ppAudioGraph) PURE;
 };
 
