@@ -24,6 +24,8 @@
 
 #include <comdef.h>
 
+/* IAudioGraphCallback is an interface that acts as a callback boundary between the application and the
+** library. */
 struct __declspec(uuid("b7fa0e54-41d7-4161-81d6-3036900cfc80")) IAudioGraphCallback : public IUnknown {
 	/* OnObjectFailure() is a callback mechanism for error reporting.  If something unexpected happens,
 	** or the library is operating out of its expected conditions, then this will be called with the
@@ -53,8 +55,13 @@ struct __declspec(uuid("2a4bee1e-2d02-4f9c-bed9-eaedfb95331d")) IAudioGraphEdge 
 
 	/* Returns this edge's formatted style string, which was used to create it. */
 	virtual LPCWSTR STDMETHODCALLTYPE GetStyleString() PURE;
+
+	/* Retrieves the audio graph that this edge is attached to. */
+	virtual VOID STDMETHODCALLTYPE GetAudioGraph(IAudioGraph** ppAudioGraph) PURE;
 };
 
+/* IAudioGraphNode represents a node in an audio graph.  It can only be a member of a single audio graph -
+** two audio graphs can't share a node object. */
 struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode : public IUnknown {
 	/* Returns the ID of this particular node. */
 	virtual LPCWSTR STDMETHODCALLTYPE GetID() PURE;
@@ -93,8 +100,12 @@ struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode 
 
 	/* Returns this node's formatted style string, which was used to create it. */
 	virtual LPCWSTR STDMETHODCALLTYPE GetStyleString() PURE;
+
+	/* Retrieves the audio graph that this node is attatched to. */
+	virtual VOID STDMETHODCALLTYPE GetGraph(IAudioGraph** ppAudioGraph) PURE;
 };
 
+/* IAudioGraph represents a single audio graph, which is composed of nodes and directed edges. */
 struct __declspec(uuid("b1f2bb1c-f1da-4f0a-ba3a-b7dbe2a7c824")) IAudioGraph : public IUnknown {
 	/* Returns the ID of this particular graph. */
 	virtual LPCWSTR STDMETHODCALLTYPE GetID() PURE;
@@ -139,17 +150,25 @@ struct __declspec(uuid("b1f2bb1c-f1da-4f0a-ba3a-b7dbe2a7c824")) IAudioGraph : pu
 	virtual VOID STDMETHODCALLTYPE SetMixVolume(FLOAT Volume) PURE;
 };
 
+/* IAudioGraphFile represents an XML file's state.  It can be loaded and parsed via IAudioGraphFactory::ParseAudioGraphFile().
+** It can also be saved at runtime, allowing an application to dynamically create saved audio graph content. */
 struct __declspec(uuid("91a4fdda-c694-4c6c-b33e-78a04545eeaa")) IAudioGraphFile : public IUnknown {
+	/* Returns the number of graphs contained in this file. */
 	virtual LONG STDMETHODCALLTYPE GetNumGraphs() PURE;
 
+	/* Retrieves a graph based on the given array index. */
 	virtual VOID STDMETHODCALLTYPE EnumGraph(LONG GraphNum, IAudioGraph** ppAudioGraph) PURE;
 
+	/* Retrieves a graph based on a given graph identifier. */
 	virtual VOID STDMETHODCALLTYPE GetGraphByID(LPCWSTR ID, IAudioGraph** ppAudioGraph) PURE;
 
+	/* Returns the object's filename. */
 	virtual LPCWSTR STDMETHODCALLTYPE GetFilename() PURE;
 
+	/* Appends an existing audio graph to the file. */
 	virtual VOID STDMETHODCALLTYPE AppendGraph(IAudioGraph* pAudioGraph) PURE;
 
+	/* Saves the file to disk in XML format. */
 	virtual VOID STDMETHODCALLTYPE Save() PURE;
 };
 
