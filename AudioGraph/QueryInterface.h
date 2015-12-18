@@ -17,13 +17,19 @@
 
 /*
 ** API documentation is available here:
-**		https://github.com/AustinBorger/AudioGraph
+**		https://github.com/AustinBorger/DXAudio
 */
 
 #pragma once
 
-#include "AudioGraph.h"
+/* Handles the job of casting to a given interface in QueryInterface(). */
+#define QUERY_INTERFACE_CAST(x)\
+	if (riid == __uuidof(x)) {\
+		x* pObj = static_cast<x*>(this);\
+		pObj->AddRef();\
+		*ppvObject = pObj;\
+		return S_OK;\
+	}
 
-class CAudioGraphFactory : public IAudioGraphFactory {
-
-};
+/* This should be called at the end of QueryInterface(). */
+#define QUERY_INTERFACE_FAIL() *ppvObject = nullptr; return E_NOINTERFACE;

@@ -193,6 +193,9 @@ struct __declspec(uuid("b824c4eb-5a50-4706-8c14-bcc2f207d6ee")) IAudioGraphFacto
 	#endif
 #endif
 
+/* AudioGraphCreateFactory() is the entry point into the API. 
+** pAudioGraphCallback is required for transitions and error reporting.
+** ppAudioGraphFactory is a pointer to a reference to the newly created factory. */
 extern "C" HRESULT _AUDIO_GRAPH_EXPORT_TAG AudioGraphCreateFactory (
 	IAudioGraphCallback* pAudioGraphCallback,
 	IAudioGraphFactory** ppAudioGraphFactory
