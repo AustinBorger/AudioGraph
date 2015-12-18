@@ -20,7 +20,12 @@
 **		https://github.com/AustinBorger/AudioGraph
 */
 
+#include <comdef.h>
+#include <atlbase.h>
+#include <Windows.h>
+
 #include "AudioGraph.h"
+#include "CAudioGraphFactory.h"
 
 HRESULT AudioGraphCreateFactory (
 	IAudioGraphCallback* pAudioGraphCallback,
@@ -29,6 +34,19 @@ HRESULT AudioGraphCreateFactory (
 	if (pAudioGraphCallback == nullptr || ppAudioGraphFactory == nullptr) {
 		return E_POINTER;
 	}
+
+	HRESULT hr = S_OK;
+
+	CComPtr<CAudioGraphFactory> Factory = new CAudioGraphFactory();
+
+	hr = Factory->Initialize(pAudioGraphCallback);
+
+	if (FAILED(hr)) {
+		*ppAudioGraphFactory = nullptr;
+		return hr;
+	}
+
+	*ppAudioGraphFactory = Factory;
 
 	return S_OK;
 }

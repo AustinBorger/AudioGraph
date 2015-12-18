@@ -17,7 +17,7 @@
 
 /*
 ** API documentation is available here:
-**		https://github.com/AustinBorger/AudioGraph
+**		https://github.com/AustinBorger/DXAudio
 */
 
 #pragma once
@@ -26,16 +26,14 @@
 #include <atlbase.h>
 #include <Windows.h>
 
-#include "AudioGraph.h"
-#include "QueryInterface.h"
 #include "DXAudio.h"
-#include "CDXAudioWriteCallback.h"
+#include "AudioGraph.h"
 
-class CAudioGraphFactory : public IAudioGraphFactory {
+class CDXAudioWriteCallback : public IDXAudioWriteCallback {
 public:
-	CAudioGraphFactory();
+	CDXAudioWriteCallback();
 
-	~CAudioGraphFactory();
+	~CDXAudioWriteCallback();
 
 	//IUnknown methods
 
@@ -47,7 +45,7 @@ public:
 		m_RefCount--;
 
 		if (m_RefCount <= 0) {
-			delete this;
+			this->~CDXAudioWriteCallback(); //don't use delete, since placement new is used by CAudioGraphFactory
 			return 0;
 		}
 
@@ -62,28 +60,21 @@ private:
 	long m_RefCount;
 
 	CComPtr<IAudioGraphCallback> m_Callback;
-	CComPtr<IDXAudioStream> m_Stream;
-	CComPtr<CDXAudioWriteCallback> m_WriteCallback;
-
-	// Ensures that memory used for m_WriteCallback is sequential to the factory.
-	BYTE _memblockWriteCallback[sizeof(CDXAudioWriteCallback)];
 
 	//IUnknown methods
 
 	STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject) final {
-		QUERY_INTERFACE_CAST(IAudioGraphFactory);
+		QUERY_INTERFACE_CAST(IDXAudioWriteCallback);
+		QUERY_INTERFACE_CAST(IDXAudioCallback);
 		QUERY_INTERFACE_CAST(IUnknown);
 		QUERY_INTERFACE_FAIL();
 	}
 
-	//IAudioGraphFactory methods
+	//IDXAudioWriteCallback methods
 
-	/* Parses an XML file defining a set of audio graphs. */
-	VOID STDMETHODCALLTYPE ParseAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) final;
+	VOID STDMETHODCALLTYPE OnObjectFailure(LPCWSTR File, UINT Line, HRESULT hr) final;
 
-	/* Creates a blank XML file defining a set of audio graphs. */
-	VOID STDMETHODCALLTYPE CreateAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) final;
+	VOID STDMETHODCALLTYPE OnProcess(FLOAT SampleRate, FLOAT* OutputBuffer, UINT BufferFrames) final;
 
-	/* Creates a blank audio graph. */
-	VOID STDMETHODCALLTYPE CreateAudioGraph(LPCWSTR Style, IAudioGraph** ppAudioGraph) final;
+	VOID STDMETHODCALLTYPE OnThreadInit() final;
 };

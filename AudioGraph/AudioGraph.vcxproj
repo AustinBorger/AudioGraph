@@ -124,6 +124,7 @@
     <ClInclude Include="CDXAudioEchoStream.h" />
     <ClInclude Include="CDXAudioInputStream.h" />
     <ClInclude Include="CDXAudioLoopbackStream.h" />
+    <ClInclude Include="CDXAudioWriteCallback.h" />
     <ClInclude Include="CDXAudioOutputStream.h" />
     <ClInclude Include="CDXAudioResampler.h" />
     <ClInclude Include="CDXAudioStream.h" />
@@ -137,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioGraph.cpp" />
+    <ClCompile Include="CAudioGraphFactory.cpp" />
     <ClCompile Include="CDXAudioDuplexStream.cpp" />
     <ClCompile Include="CDXAudioEchoStream.cpp" />
     <ClCompile Include="CDXAudioInputStream.cpp" />
