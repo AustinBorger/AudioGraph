@@ -74,11 +74,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_AUDIO_GRAPH_DLL_PROJECT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories />
+      <PreprocessorDefinitions>_AUDIO_GRAPH_DLL_PROJECT;_DXAUDIO_DLL_PROJECT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../Include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories />
+      <AdditionalLibraryDirectories>../Lib/Debug/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -95,13 +95,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_AUDIO_GRAPH_DLL_PROJECT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories />
+      <PreprocessorDefinitions>_AUDIO_GRAPH_DLL_PROJECT;_DXAUDIO_DLL_PROJECT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../Include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories />
+      <AdditionalLibraryDirectories>../Lib/Release/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -120,9 +120,35 @@
   <ItemGroup>
     <ClInclude Include="AudioGraph.h" />
     <ClInclude Include="CAudioGraphFactory.h" />
+    <ClInclude Include="CDXAudioDuplexStream.h" />
+    <ClInclude Include="CDXAudioEchoStream.h" />
+    <ClInclude Include="CDXAudioInputStream.h" />
+    <ClInclude Include="CDXAudioLoopbackStream.h" />
+    <ClInclude Include="CDXAudioOutputStream.h" />
+    <ClInclude Include="CDXAudioResampler.h" />
+    <ClInclude Include="CDXAudioStream.h" />
+    <ClInclude Include="ClientReader.h" />
+    <ClInclude Include="ClientWriter.h" />
+    <ClInclude Include="CMMNotificationClient.h" />
+    <ClInclude Include="CMMNotificationClientListener.h" />
+    <ClInclude Include="DXAudio.h" />
+    <ClInclude Include="DXAudioResampler.h" />
+    <ClInclude Include="QueryInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioGraph.cpp" />
+    <ClCompile Include="CDXAudioDuplexStream.cpp" />
+    <ClCompile Include="CDXAudioEchoStream.cpp" />
+    <ClCompile Include="CDXAudioInputStream.cpp" />
+    <ClCompile Include="CDXAudioLoopbackStream.cpp" />
+    <ClCompile Include="CDXAudioOutputStream.cpp" />
+    <ClCompile Include="CDXAudioResampler.cpp" />
+    <ClCompile Include="CDXAudioStream.cpp" />
+    <ClCompile Include="ClientReader.cpp" />
+    <ClCompile Include="ClientWriter.cpp" />
+    <ClCompile Include="CMMNotificationClient.cpp" />
+    <ClCompile Include="DXAudio.cpp" />
+    <ClCompile Include="DXAudioResampler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

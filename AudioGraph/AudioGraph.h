@@ -24,6 +24,13 @@
 
 #include <comdef.h>
 
+struct IAudioGraphCallback;
+struct IAudioGraphEdge;
+struct IAudioGraphNode;
+struct IAudioGraphFile;
+struct IAudioGraph;
+struct IAudioGraphFactory;
+
 /* IAudioGraphCallback is an interface that acts as a callback boundary between the application and the
 ** library. */
 struct __declspec(uuid("b7fa0e54-41d7-4161-81d6-3036900cfc80")) IAudioGraphCallback : public IUnknown {
