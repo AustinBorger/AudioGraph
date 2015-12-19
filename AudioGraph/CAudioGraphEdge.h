@@ -57,6 +57,15 @@ public:
 		return m_RefCount;
 	}
 
+	HRESULT Initialize (
+		IAudioGraphCallback* pCallback,
+		CAudioGraphFile* pFile,
+		CAudioGraph* pGraph,
+		CAudioGraphNode* pFrom,
+		CAudioGraphNode* pTo,
+		LPCSTR Style
+	);
+
 private:
 	long m_RefCount;
 

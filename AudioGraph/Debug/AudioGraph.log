@@ -1,9 +1,5 @@
-﻿  CAudioGraphFile.cpp
+﻿  CAudioGraph.cpp
      Creating library C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.lib and object C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.exp
 CAudioGraph.obj : error LNK2001: unresolved external symbol "private: virtual void __stdcall CAudioGraph::CreateNode(char const *,struct IAudioGraphNode * *)" (?CreateNode@CAudioGraph@@EAGXPBDPAPAUIAudioGraphNode@@@Z)
 CAudioGraph.obj : error LNK2001: unresolved external symbol "private: virtual void __stdcall CAudioGraph::CreateEdge(char const *,struct IAudioGraphEdge * *)" (?CreateEdge@CAudioGraph@@EAGXPBDPAPAUIAudioGraphEdge@@@Z)
-CAudioGraph.obj : error LNK2001: unresolved external symbol "private: virtual void __stdcall CAudioGraph::RemoveNode(struct IAudioGraphNode *)" (?RemoveNode@CAudioGraph@@EAGXPAUIAudioGraphNode@@@Z)
-CAudioGraph.obj : error LNK2001: unresolved external symbol "private: virtual void __stdcall CAudioGraph::RemoveEdge(struct IAudioGraphEdge *)" (?RemoveEdge@CAudioGraph@@EAGXPAUIAudioGraphEdge@@@Z)
-CAudioGraph.obj : error LNK2001: unresolved external symbol "private: virtual void __stdcall CAudioGraph::GetNodeByID(char const *,struct IAudioGraphNode * *)" (?GetNodeByID@CAudioGraph@@EAGXPBDPAPAUIAudioGraphNode@@@Z)
-CAudioGraph.obj : error LNK2001: unresolved external symbol "private: virtual void __stdcall CAudioGraph::GetEdgeByID(char const *,struct IAudioGraphEdge * *)" (?GetEdgeByID@CAudioGraph@@EAGXPBDPAPAUIAudioGraphEdge@@@Z)
-C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.dll : fatal error LNK1120: 6 unresolved externals
+C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.dll : fatal error LNK1120: 2 unresolved externals

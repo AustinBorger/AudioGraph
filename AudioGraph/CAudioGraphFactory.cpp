@@ -99,7 +99,7 @@ VOID CAudioGraphFactory::CreateAudioGraph(LPCSTR Style, IAudioGraph** ppAudioGra
 
 	CComPtr<CAudioGraph> Graph = new CAudioGraph();
 
-	hr = Graph->Initialize(m_Callback, Style);
+	hr = Graph->Initialize(m_Callback, Style, nullptr);
 
 	if (FAILED(hr)) {
 		*ppAudioGraph = nullptr;

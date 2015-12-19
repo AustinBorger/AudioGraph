@@ -31,6 +31,53 @@ CAudioGraphNode::CAudioGraphNode() : m_RefCount(1) { }
 
 CAudioGraphNode::~CAudioGraphNode() { }
 
+HRESULT CAudioGraphNode::Initialize (
+	IAudioGraphCallback* pCallback,
+	CAudioGraph* pGraph,
+	CAudioGraphFile* pFile,
+	LPCSTR Style
+) {
+	m_Callback = pCallback;
+	m_Graph = pGraph;
+	m_File = pFile;
+
+	// Parse style string
+
+	return S_OK;
+}
+
+VOID CAudioGraphNode::EnumEdge(UINT EdgeNum, IAudioGraphEdge** ppEdge) {
+	if (ppEdge == nullptr) {
+		m_Callback->OnObjectFailure(FILENAME, __LINE__, E_POINTER);
+		return;
+	}
+
+	try {
+		*ppEdge = m_EdgeEnum.at(EdgeNum);
+	} catch (...) {
+		*ppEdge = nullptr;
+		m_Callback->OnObjectFailure(FILENAME, __LINE__, E_INVALIDARG);
+		return;
+	}
+}
+
+VOID CAudioGraphNode::GetEdgeByID(LPCSTR ID, IAudioGraphEdge** ppEdge) {
+	if (ppEdge == nullptr) {
+		m_Callback->OnObjectFailure(FILENAME, __LINE__, E_POINTER);
+		return;
+	}
+
+	std::string stringID = ID;
+
+	try {
+		*ppEdge = m_EdgeMap.at(stringID);
+	} catch (...) {
+		*ppEdge = nullptr;
+		m_Callback->OnObjectFailure(FILENAME, __LINE__, E_INVALIDARG);
+		return;
+	}
+}
+
 VOID CAudioGraphNode::GetGraph(IAudioGraph** ppAudioGraph) {
 	if (ppAudioGraph == nullptr) {
 		m_Callback->OnObjectFailure(FILENAME, __LINE__, E_POINTER);

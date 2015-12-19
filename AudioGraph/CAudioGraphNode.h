@@ -26,6 +26,8 @@
 #include <atlbase.h>
 #include <Windows.h>
 #include <string>
+#include <vector>
+#include <map>
 
 #include "AudioGraph.h"
 #include "QueryInterface.h"
@@ -57,6 +59,13 @@ public:
 		return m_RefCount;
 	}
 
+	HRESULT Initialize (
+		IAudioGraphCallback* pCallback,
+		CAudioGraph* pGraph,
+		CAudioGraphFile* pFile,
+		LPCSTR Style
+	);
+
 private:
 	long m_RefCount;
 
@@ -67,9 +76,11 @@ private:
 	std::string m_ID;
 	std::string m_StyleString;
 	std::wstring m_AudioFilename;
-	FLOAT m_Gain;
 	UINT m_SampleOffset;
 	UINT m_SampleDuration;
+
+	std::vector<CComPtr<CAudioGraphEdge>> m_EdgeEnum;
+	std::map<std::string, CComPtr<CAudioGraphEdge>> m_EdgeMap;
 
 	//IUnknown methods
 
@@ -92,21 +103,15 @@ private:
 	}
 
 	/* Returns the number of edges extending from this particular node. */
-	UINT STDMETHODCALLTYPE GetNumEdges() final;
+	UINT STDMETHODCALLTYPE GetNumEdges() final {
+		return m_EdgeEnum.size();
+	}
 
 	/* Retrieves an edge extending from this node by given array index. */
-	VOID STDMETHODCALLTYPE EnumEdge(LONG EdgeNum, IAudioGraphEdge** ppEdge) final;
+	VOID STDMETHODCALLTYPE EnumEdge(UINT EdgeNum, IAudioGraphEdge** ppEdge) final;
 
 	/* Retrieves an edge based on a given identifier. */
 	VOID STDMETHODCALLTYPE GetEdgeByID(LPCSTR ID, IAudioGraphEdge** ppEdge) final;
-
-	/* Returns the stretch coefficient associated with this particular node. */
-	FLOAT STDMETHODCALLTYPE GetStretch() final;
-
-	/* Returns the gain coefficient associated with this particular node. */
-	FLOAT STDMETHODCALLTYPE GetGain() final {
-		return m_Gain;
-	}
 
 	/* Returns the offset this node has from the start of the PCM audio data in the
 	** associated file, in samples. */
@@ -121,10 +126,14 @@ private:
 
 	/* Returns the offset this node has from the start of the PCM audio data in the
 	** associated file, in seconds. */
-	FLOAT STDMETHODCALLTYPE GetTimeOffset() final;
+	FLOAT STDMETHODCALLTYPE GetTimeOffset() final {
+		return FLOAT(m_SampleOffset) / FLOAT(44100);
+	}
 
 	/* Returns the duration this node will play for, in seconds. */
-	FLOAT STDMETHODCALLTYPE GetTimeDuration() final;
+	FLOAT STDMETHODCALLTYPE GetTimeDuration() final {
+		return FLOAT(m_SampleDuration) / FLOAT(44100);
+	}
 
 	/* Returns this node's formatted style string, which was used to create it. */
 	LPCSTR STDMETHODCALLTYPE GetStyleString() final {

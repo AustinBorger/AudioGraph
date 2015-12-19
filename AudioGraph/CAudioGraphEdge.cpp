@@ -31,6 +31,43 @@ CAudioGraphEdge::CAudioGraphEdge() : m_RefCount(1) { }
 
 CAudioGraphEdge::~CAudioGraphEdge() { }
 
+HRESULT CAudioGraphEdge::Initialize (
+	IAudioGraphCallback* pCallback,
+	CAudioGraphFile* pFile,
+	CAudioGraph* pGraph,
+	CAudioGraphNode* pFrom,
+	CAudioGraphNode* pTo,
+	LPCSTR Style
+) {
+	m_Callback = pCallback;
+	m_File = pFile;
+	m_Graph = pGraph;
+	m_From = pFrom;
+	m_To = pTo;
+
+	// Parse style string
+
+	return S_OK;
+}
+
+VOID CAudioGraphEdge::GetFrom(IAudioGraphNode** ppNode) {
+	if (ppNode == nullptr) {
+		m_Callback->OnObjectFailure(FILENAME, __LINE__, E_POINTER);
+		return;
+	}
+
+	*ppNode = m_From;
+}
+
+VOID CAudioGraphEdge::GetTo(IAudioGraphNode** ppNode) {
+	if (ppNode == nullptr) {
+		m_Callback->OnObjectFailure(FILENAME, __LINE__, E_POINTER);
+		return;
+	}
+
+	*ppNode = m_To;
+}
+
 VOID CAudioGraphEdge::GetAudioGraph(IAudioGraph** ppAudioGraph) {
 	if (ppAudioGraph == nullptr) {
 		m_Callback->OnObjectFailure(FILENAME, __LINE__, E_POINTER);

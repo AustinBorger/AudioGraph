@@ -32,6 +32,7 @@
 #include "AudioGraph.h"
 #include "QueryInterface.h"
 #include "CAudioGraphNode.h"
+#include "CAudioGraphEdge.h"
 
 class CAudioGraphFile;
 
@@ -60,7 +61,7 @@ public:
 
 	//New methods
 
-	HRESULT Initialize(IAudioGraphCallback* pAudioGraphCallback, LPCSTR Style, IAudioGraphFile* pAudioGraphFile);
+	HRESULT Initialize(IAudioGraphCallback* pAudioGraphCallback, LPCSTR Style, CAudioGraphFile* pAudioGraphFile);
 
 private:
 	long m_RefCount;
@@ -71,8 +72,11 @@ private:
 	std::string m_ID;
 	std::string m_Type;
 	std::string m_StyleString;
-	FLOAT m_Gain;
-	FLOAT m_MixVolume;
+
+	std::vector<CComPtr<CAudioGraphNode>> m_NodeEnum;
+	std::map<std::string, CComPtr<CAudioGraphNode>> m_NodeMap;
+	std::vector<CComPtr<CAudioGraphEdge>> m_EdgeEnum;
+	std::map<std::string, CComPtr<CAudioGraphEdge>> m_EdgeMap;
 
 	//IUnknown methods
 
@@ -99,11 +103,6 @@ private:
 		return m_StyleString.c_str();
 	}
 
-	/* Returns the gain of this graph. */
-	FLOAT STDMETHODCALLTYPE GetGain() final {
-		return m_Gain;
-	}
-
 	/* Creates a node that will be associated with this graph.  Style is a string listing the
 	** attributes of the node, in XML syntax. */
 	VOID STDMETHODCALLTYPE CreateNode(LPCSTR Style, IAudioGraphNode** ppNode) final;
@@ -120,23 +119,27 @@ private:
 	** expected to release any references to the edge. */
 	VOID STDMETHODCALLTYPE RemoveEdge(IAudioGraphEdge* pEdge) final;
 
+	/* Returns the number of nodes associated with this particular graph. */
+	UINT STDMETHODCALLTYPE GetNumNodes() final {
+		return m_NodeEnum.size();
+	}
+
+	/* Retrieves an node associted with this graph by array index. */
+	VOID STDMETHODCALLTYPE EnumNode(UINT NodeNum, IAudioGraphNode** ppNode) final;
+
 	/* Retrieves a node based on a given node identifier. */
 	VOID STDMETHODCALLTYPE GetNodeByID(LPCSTR ID, IAudioGraphNode** ppNode) final;
 
+	/* Returns the number of edges associated with this particular graph. */
+	UINT STDMETHODCALLTYPE GetNumEdges() final {
+		return m_EdgeEnum.size();
+	}
+
+	/* Retrieves an edge associted with this graph by array index. */
+	VOID STDMETHODCALLTYPE EnumEdge(UINT EdgeNum, IAudioGraphEdge** ppEdge) final;
+
 	/* Retrieves an edge based on a given edge identifier. */
 	VOID STDMETHODCALLTYPE GetEdgeByID(LPCSTR ID, IAudioGraphEdge** ppEdge) final;
-
-	/* Gets the mix gain of this graph.  The mix gain is used for mixing/fading between different
-	** audio graphs, where multiple graphs are playing concurrently. */
-	FLOAT STDMETHODCALLTYPE GetMixVolume() final {
-		return m_MixVolume;
-	}
-
-	/* Sets the mix gain of this graph.  The mix gain is used for mixing/fading between different
-	** audio graphs, where multiple graphs are playing concurrently. */
-	VOID STDMETHODCALLTYPE SetMixVolume(FLOAT Volume) final {
-		m_MixVolume = Volume;
-	}
 
 	/* Retrieves the audio graph file that this graph is associated with, if there is one. */
 	VOID STDMETHODCALLTYPE GetAudioGraphFile(IAudioGraphFile** ppAudioGraphFile) final;

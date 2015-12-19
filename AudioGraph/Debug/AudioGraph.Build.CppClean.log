@@ -1,3 +1,5 @@
+c:\users\austin\documents\com objects\audiograph\debug\audiograph.lib
+c:\users\austin\documents\com objects\audiograph\debug\audiograph.exp
 c:\users\austin\documents\com objects\audiograph\audiograph\debug\vc140.pdb
 c:\users\austin\documents\com objects\audiograph\audiograph\debug\vc140.idb
 c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.obj
@@ -13,7 +15,16 @@ c:\users\austin\documents\com objects\audiograph\audiograph\debug\clientwriter.o
 c:\users\austin\documents\com objects\audiograph\audiograph\debug\cmmnotificationclient.obj
 c:\users\austin\documents\com objects\audiograph\audiograph\debug\dxaudio.obj
 c:\users\austin\documents\com objects\audiograph\audiograph\debug\dxaudioresampler.obj
+c:\users\austin\documents\com objects\audiograph\audiograph\debug\cdxaudiowritecallback.obj
+c:\users\austin\documents\com objects\audiograph\audiograph\debug\caudiographfactory.obj
+c:\users\austin\documents\com objects\audiograph\audiograph\debug\caudiographfile.obj
+c:\users\austin\documents\com objects\audiograph\audiograph\debug\caudiograph.obj
+c:\users\austin\documents\com objects\audiograph\audiograph\debug\caudiographedge.obj
+c:\users\austin\documents\com objects\audiograph\audiograph\debug\caudiographnode.obj
+c:\users\austin\documents\com objects\audiograph\debug\audiograph.ilk
+c:\users\austin\documents\com objects\audiograph\debug\audiograph.dll
 c:\users\austin\documents\com objects\audiograph\debug\audiograph.pdb
+c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\audiograph.write.1u.tlog
 c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\cl.command.1.tlog
 c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\cl.read.1.tlog
 c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\cl.write.1.tlog
@@ -21,6 +32,12 @@ c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlo
 c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\link-cvtres.write.1.tlog
 c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\link-rc.read.1.tlog
 c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\link-rc.write.1.tlog
+c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\link.6312-cvtres.read.1.tlog
+c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\link.6312-cvtres.write.1.tlog
+c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\link.6312-rc.read.1.tlog
+c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\link.6312-rc.write.1.tlog
+c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\link.6312.read.1.tlog
+c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\link.6312.write.1.tlog
 c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\link.command.1.tlog
 c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\link.read.1.tlog
 c:\users\austin\documents\com objects\audiograph\audiograph\debug\audiograph.tlog\link.write.1.tlog

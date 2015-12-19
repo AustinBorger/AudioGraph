@@ -51,17 +51,17 @@ struct __declspec(uuid("2a4bee1e-2d02-4f9c-bed9-eaedfb95331d")) IAudioGraphEdge 
 	/* Returns the ID of this particular edge. */
 	virtual LPCSTR STDMETHODCALLTYPE GetID() PURE;
 
-	/* Retrieves the source node of this particular edge. */
-	virtual VOID STDMETHODCALLTYPE GetFrom(IAudioGraphNode** ppNode) PURE;
-
-	/* Retrieves the destination node of this particular edge. */
-	virtual VOID STDMETHODCALLTYPE GetTo(IAudioGraphNode** ppNode) PURE;
-
 	/* Returns the trigger string associated with this edge. */
 	virtual LPCSTR STDMETHODCALLTYPE GetTrigger() PURE;
 
 	/* Returns this edge's formatted style string, which was used to create it. */
 	virtual LPCSTR STDMETHODCALLTYPE GetStyleString() PURE;
+
+	/* Retrieves the source node of this particular edge. */
+	virtual VOID STDMETHODCALLTYPE GetFrom(IAudioGraphNode** ppNode) PURE;
+
+	/* Retrieves the destination node of this particular edge. */
+	virtual VOID STDMETHODCALLTYPE GetTo(IAudioGraphNode** ppNode) PURE;
 
 	/* Retrieves the audio graph that this edge is attached to. */
 	virtual VOID STDMETHODCALLTYPE GetAudioGraph(IAudioGraph** ppAudioGraph) PURE;
@@ -82,18 +82,6 @@ struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode 
 	/* Returns the number of edges extending from this particular node. */
 	virtual UINT STDMETHODCALLTYPE GetNumEdges() PURE;
 
-	/* Retrieves an edge extending from this node by given array index. */
-	virtual VOID STDMETHODCALLTYPE EnumEdge(LONG EdgeNum, IAudioGraphEdge** ppEdge) PURE;
-
-	/* Retrieves an edge based on a given identifier. */
-	virtual VOID STDMETHODCALLTYPE GetEdgeByID(LPCSTR ID, IAudioGraphEdge** ppEdge) PURE;
-
-	/* Returns the stretch coefficient associated with this particular node. */
-	virtual FLOAT STDMETHODCALLTYPE GetStretch() PURE;
-
-	/* Returns the gain coefficient associated with this particular node. */
-	virtual FLOAT STDMETHODCALLTYPE GetGain() PURE;
-
 	/* Returns the offset this node has from the start of the PCM audio data in the
 	** associated file, in samples. */
 	virtual UINT STDMETHODCALLTYPE GetSampleOffset() PURE;
@@ -110,6 +98,12 @@ struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode 
 
 	/* Returns this node's formatted style string, which was used to create it. */
 	virtual LPCSTR STDMETHODCALLTYPE GetStyleString() PURE;
+
+	/* Retrieves an edge extending from this node by given array index. */
+	virtual VOID STDMETHODCALLTYPE EnumEdge(UINT EdgeNum, IAudioGraphEdge** ppEdge) PURE;
+
+	/* Retrieves an edge based on a given identifier. */
+	virtual VOID STDMETHODCALLTYPE GetEdgeByID(LPCSTR ID, IAudioGraphEdge** ppEdge) PURE;
 
 	/* Retrieves the audio graph that this node is attatched to. */
 	virtual VOID STDMETHODCALLTYPE GetGraph(IAudioGraph** ppAudioGraph) PURE;
@@ -129,9 +123,6 @@ struct __declspec(uuid("b1f2bb1c-f1da-4f0a-ba3a-b7dbe2a7c824")) IAudioGraph : pu
 	/* Returns the style string of this graph. */
 	virtual LPCSTR STDMETHODCALLTYPE GetStyleString() PURE;
 
-	/* Returns the gain of this graph. */
-	virtual FLOAT STDMETHODCALLTYPE GetGain() PURE;
-
 	/* Creates a node that will be associated with this graph.  Style is a string listing the
 	** attributes of the node, in XML syntax. */
 	virtual VOID STDMETHODCALLTYPE CreateNode(LPCSTR Style, IAudioGraphNode** ppNode) PURE;
@@ -148,19 +139,23 @@ struct __declspec(uuid("b1f2bb1c-f1da-4f0a-ba3a-b7dbe2a7c824")) IAudioGraph : pu
 	** expected to release any references to the edge. */
 	virtual VOID STDMETHODCALLTYPE RemoveEdge(IAudioGraphEdge* pEdge) PURE;
 
+	/* Returns the number of nodes associated with this particular graph. */
+	virtual UINT STDMETHODCALLTYPE GetNumNodes() PURE;
+
+	/* Retrieves an node associted with this graph by array index. */
+	virtual VOID STDMETHODCALLTYPE EnumNode(UINT NodeNum, IAudioGraphNode** ppNode) PURE;
+
 	/* Retrieves a node based on a given node identifier. */
 	virtual VOID STDMETHODCALLTYPE GetNodeByID(LPCSTR ID, IAudioGraphNode** ppNode) PURE;
 
+	/* Returns the number of edges associated with this particular graph. */
+	virtual UINT STDMETHODCALLTYPE GetNumEdges() PURE;
+
+	/* Retrieves an edge associted with this graph by array index. */
+	virtual VOID STDMETHODCALLTYPE EnumEdge(UINT EdgeNum, IAudioGraphEdge** ppEdge) PURE;
+
 	/* Retrieves an edge based on a given edge identifier. */
 	virtual VOID STDMETHODCALLTYPE GetEdgeByID(LPCSTR ID, IAudioGraphEdge** ppEdge) PURE;
-
-	/* Gets the mix gain of this graph.  The mix gain is used for mixing/fading between different
-	** audio graphs, where multiple graphs are playing concurrently. */
-	virtual FLOAT STDMETHODCALLTYPE GetMixVolume() PURE;
-
-	/* Sets the mix gain of this graph.  The mix gain is used for mixing/fading between different
-	** audio graphs, where multiple graphs are playing concurrently. */
-	virtual VOID STDMETHODCALLTYPE SetMixVolume(FLOAT Volume) PURE;
 
 	/* Retrieves the audio graph file that this graph is associated with, if there is one. */
 	virtual VOID STDMETHODCALLTYPE GetAudioGraphFile(IAudioGraphFile** ppAudioGraphFile) PURE;
