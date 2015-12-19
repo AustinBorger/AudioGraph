@@ -120,37 +120,28 @@ VOID CAudioGraphFile::Parse() {
 
 	xml_document<> document;
 	document.parse<0>(content);
-
 	xml_node<>* root_node = document.first_node("AudioGraph");
+	std::string style_string;
+
+	static const auto attribute = [&style_string](xml_node<>* node, LPCSTR attribute) {
+		if (strcmp(node->first_attribute(attribute)->value(), "") != 0) {
+			if (!style_string.empty()) {
+				style_string += " ";
+			}
+
+			style_string += attribute;
+			style_string += " = \"";
+			style_string += node->first_attribute(attribute)->value();
+			style_string += "\"";
+		}
+	};
 
 	for (xml_node<>* graph_node = root_node->first_node("Graph"); graph_node; graph_node = graph_node->next_sibling()) {
-		std::string style_string;
+		style_string = "";
 
-		if (strcmp(graph_node->first_attribute("id")->value(), "") != 0) {
-			style_string += "id = \"";
-			style_string += graph_node->first_attribute("id")->value();
-			style_string += "\"";
-		}
-
-		if (strcmp(graph_node->first_attribute("gain")->value(), "") != 0) {
-			if (!style_string.empty()) {
-				style_string += " ";
-			}
-
-			style_string += "gain = \"";
-			style_string += graph_node->first_attribute("gain")->value();
-			style_string += "\"";
-		}
-
-		if (strcmp(graph_node->first_attribute("type")->value(), "") != 0) {
-			if (!style_string.empty()) {
-				style_string += " ";
-			}
-
-			style_string += "type = \"";
-			style_string += graph_node->first_attribute("gain")->value();
-			style_string += "\"";
-		}
+		// Graph attributes: id, type
+		attribute(graph_node, "id");
+		attribute(graph_node, "type");
 
 		CComPtr<CAudioGraph> Graph = new CAudioGraph();
 
@@ -161,22 +152,30 @@ VOID CAudioGraphFile::Parse() {
 			CComPtr<IAudioGraph> I_Graph = Graph;
 			m_GraphEnum.push_back(I_Graph);
 			m_GraphMap[I_Graph->GetID()] = I_Graph;
-		}
+		} else continue;
 
 		for (xml_node<>* vertex_node = graph_node->first_node("Node"); vertex_node; vertex_node = vertex_node->next_sibling()) {
 			style_string = "";
 
-			if (strcmp(vertex_node->first_attribute("id")->value(), "") != 0) {
-				style_string += "id = \"";
-				style_string += vertex_node->first_attribute("id")->value();
-				style_string += "\"";
-			}
+			// Node attributes: id, filename, offset, duration
+			attribute(vertex_node, "id");
+			attribute(vertex_node, "filename");
+			attribute(vertex_node, "offset");
+			attribute(vertex_node, "duration");
 
-			CComPtr<CAudioGraphNode> Node = new CAudioGraphNode();
+			Graph->CreateNode(style_string.c_str());
 		}
 
 		for (xml_node<>* edge_node = graph_node->first_node("Edge"); edge_node; edge_node = edge_node->next_sibling()) {
 			style_string = "";
+
+			// Edge attributes: id, trigger, to, from
+			attribute(edge_node, "id");
+			attribute(edge_node, "trigger");
+			attribute(edge_node, "to");
+			attribute(edge_node, "from");
+
+			Graph->CreateEdge(style_string.c_str());
 		}
 	}
 

@@ -61,8 +61,6 @@ public:
 		IAudioGraphCallback* pCallback,
 		CAudioGraphFile* pFile,
 		CAudioGraph* pGraph,
-		CAudioGraphNode* pFrom,
-		CAudioGraphNode* pTo,
 		LPCSTR Style
 	);
 

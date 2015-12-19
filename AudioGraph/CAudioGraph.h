@@ -63,6 +63,12 @@ public:
 
 	HRESULT Initialize(IAudioGraphCallback* pAudioGraphCallback, LPCSTR Style, CAudioGraphFile* pAudioGraphFile);
 
+	/* To be used by CAudioGraphFile when parsing. */
+	VOID CreateNode(LPCSTR Style);
+
+	/* To be used by CAudioGraphFile when parsing. */
+	VOID CreateEdge(LPCSTR Style);
+
 private:
 	long m_RefCount;
 

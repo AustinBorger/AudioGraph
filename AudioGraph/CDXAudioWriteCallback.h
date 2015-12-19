@@ -25,6 +25,7 @@
 #include <comdef.h>
 #include <atlbase.h>
 #include <Windows.h>
+#include <queue>
 
 #include "DXAudio.h"
 #include "AudioGraph.h"
@@ -57,10 +58,13 @@ public:
 
 	HRESULT Initialize(IAudioGraphCallback* pAudioGraphCallback);
 
+	VOID QueueAudioGraph(IAudioGraph* pAudioGraph);
+
 private:
 	long m_RefCount;
 
 	CComPtr<IAudioGraphCallback> m_Callback;
+	std::queue<CComPtr<IAudioGraph>> m_PlaybackQueue;
 
 	//IUnknown methods
 

@@ -25,7 +25,6 @@
 #include <comdef.h>
 #include <atlbase.h>
 #include <Windows.h>
-#include <vector>
 
 #include "AudioGraph.h"
 #include "QueryInterface.h"
@@ -88,4 +87,7 @@ private:
 
 	/* Creates a blank audio graph. */
 	VOID STDMETHODCALLTYPE CreateAudioGraph(LPCSTR Style, IAudioGraph** ppAudioGraph) final;
+
+	/* Places an audio graph in the playback queue. */
+	VOID STDMETHODCALLTYPE QueueAudioGraph(IAudioGraph* pAudioGraph) final;
 };

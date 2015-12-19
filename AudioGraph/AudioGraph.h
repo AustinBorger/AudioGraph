@@ -76,11 +76,11 @@ struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode 
 	/* Returns the ID of this particular node. */
 	virtual LPCSTR STDMETHODCALLTYPE GetID() PURE;
 
-	/* Returns the name of the audio file that this node is streamed from. */
-	virtual LPCWSTR STDMETHODCALLTYPE GetAudioFilename() PURE;
+	/* Returns this node's formatted style string, which was used to create it. */
+	virtual LPCSTR STDMETHODCALLTYPE GetStyleString() PURE;
 
-	/* Returns the number of edges extending from this particular node. */
-	virtual UINT STDMETHODCALLTYPE GetNumEdges() PURE;
+	/* Returns the name of the audio file that this node is streamed from. */
+	virtual LPCSTR STDMETHODCALLTYPE GetAudioFilename() PURE;
 
 	/* Returns the offset this node has from the start of the PCM audio data in the
 	** associated file, in samples. */
@@ -96,8 +96,8 @@ struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode 
 	/* Returns the duration this node will play for, in seconds. */
 	virtual FLOAT STDMETHODCALLTYPE GetTimeDuration() PURE;
 
-	/* Returns this node's formatted style string, which was used to create it. */
-	virtual LPCSTR STDMETHODCALLTYPE GetStyleString() PURE;
+	/* Returns the number of edges extending from this particular node. */
+	virtual UINT STDMETHODCALLTYPE GetNumEdges() PURE;
 
 	/* Retrieves an edge extending from this node by given array index. */
 	virtual VOID STDMETHODCALLTYPE EnumEdge(UINT EdgeNum, IAudioGraphEdge** ppEdge) PURE;
@@ -164,6 +164,9 @@ struct __declspec(uuid("b1f2bb1c-f1da-4f0a-ba3a-b7dbe2a7c824")) IAudioGraph : pu
 /* IAudioGraphFile represents an XML file's state.  It can be loaded and parsed via IAudioGraphFactory::ParseAudioGraphFile().
 ** It can also be saved at runtime, allowing an application to dynamically create saved audio graph content. */
 struct __declspec(uuid("91a4fdda-c694-4c6c-b33e-78a04545eeaa")) IAudioGraphFile : public IUnknown {
+	/* Returns the object's filename. */
+	virtual LPCWSTR STDMETHODCALLTYPE GetFilename() PURE;
+
 	/* Returns the number of graphs contained in this file. */
 	virtual UINT STDMETHODCALLTYPE GetNumGraphs() PURE;
 
@@ -172,9 +175,6 @@ struct __declspec(uuid("91a4fdda-c694-4c6c-b33e-78a04545eeaa")) IAudioGraphFile 
 
 	/* Retrieves a graph based on a given graph identifier. */
 	virtual VOID STDMETHODCALLTYPE GetGraphByID(LPCSTR ID, IAudioGraph** ppAudioGraph) PURE;
-
-	/* Returns the object's filename. */
-	virtual LPCWSTR STDMETHODCALLTYPE GetFilename() PURE;
 
 	/* Appends an existing audio graph to the file. */
 	virtual VOID STDMETHODCALLTYPE AppendGraph(IAudioGraph* pAudioGraph) PURE;
@@ -194,6 +194,9 @@ struct __declspec(uuid("b824c4eb-5a50-4706-8c14-bcc2f207d6ee")) IAudioGraphFacto
 
 	/* Creates a blank audio graph. */
 	virtual VOID STDMETHODCALLTYPE CreateAudioGraph(LPCSTR Style, IAudioGraph** ppAudioGraph) PURE;
+
+	/* Places an audio graph in the playback queue. */
+	virtual VOID STDMETHODCALLTYPE QueueAudioGraph(IAudioGraph* pAudioGraph) PURE;
 };
 
 #ifndef _AUDIO_GRAPH_EXPORT_TAG

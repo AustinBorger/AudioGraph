@@ -35,15 +35,11 @@ HRESULT CAudioGraphEdge::Initialize (
 	IAudioGraphCallback* pCallback,
 	CAudioGraphFile* pFile,
 	CAudioGraph* pGraph,
-	CAudioGraphNode* pFrom,
-	CAudioGraphNode* pTo,
 	LPCSTR Style
 ) {
 	m_Callback = pCallback;
 	m_File = pFile;
 	m_Graph = pGraph;
-	m_From = pFrom;
-	m_To = pTo;
 
 	// Parse style string
 

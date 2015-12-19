@@ -45,6 +45,14 @@ HRESULT CAudioGraph::Initialize(IAudioGraphCallback* pAudioGraphCallback, LPCSTR
 	return S_OK;
 }
 
+VOID CAudioGraph::CreateNode(LPCSTR Style, IAudioGraphNode** ppNode) {
+
+}
+
+VOID CAudioGraph::CreateEdge(LPCSTR Style, IAudioGraphEdge** ppEdge) {
+
+}
+
 VOID CAudioGraph::RemoveNode(IAudioGraphNode* pNode) {
 	auto iter = std::find(m_NodeEnum.begin(), m_NodeEnum.end(), pNode);
 

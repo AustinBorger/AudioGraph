@@ -74,8 +74,8 @@ private:
 	CComPtr<CAudioGraphFile> m_File;
 
 	std::string m_ID;
+	std::string m_AudioFilename;
 	std::string m_StyleString;
-	std::wstring m_AudioFilename;
 	UINT m_SampleOffset;
 	UINT m_SampleDuration;
 
@@ -98,7 +98,7 @@ private:
 	}
 
 	/* Returns the name of the audio file that this node is streamed from. */
-	LPCWSTR STDMETHODCALLTYPE GetAudioFilename() final {
+	LPCSTR STDMETHODCALLTYPE GetAudioFilename() final {
 		return m_AudioFilename.c_str();
 	}
 

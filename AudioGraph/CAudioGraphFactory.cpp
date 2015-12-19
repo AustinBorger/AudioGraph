@@ -109,3 +109,7 @@ VOID CAudioGraphFactory::CreateAudioGraph(LPCSTR Style, IAudioGraph** ppAudioGra
 
 	*ppAudioGraph = Graph;
 }
+
+VOID CAudioGraphFactory::QueueAudioGraph(IAudioGraph* pAudioGraph) {
+	m_WriteCallback->QueueAudioGraph(pAudioGraph);
+}

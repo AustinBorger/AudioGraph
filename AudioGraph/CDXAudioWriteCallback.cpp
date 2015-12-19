@@ -32,6 +32,10 @@ HRESULT CDXAudioWriteCallback::Initialize(IAudioGraphCallback* pAudioGraphCallba
 	return S_OK;
 }
 
+VOID CDXAudioWriteCallback::QueueAudioGraph(IAudioGraph* pAudioGraph) {
+	m_PlaybackQueue.push(pAudioGraph);
+}
+
 VOID CDXAudioWriteCallback::OnObjectFailure(LPCWSTR File, UINT Line, HRESULT hr) {
 	m_Callback->OnObjectFailure(File, Line, hr);
 }
