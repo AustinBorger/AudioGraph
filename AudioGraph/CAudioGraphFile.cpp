@@ -23,6 +23,8 @@
 #include <string>
 
 #include "CAudioGraphFile.h"
+#include "CAudioGraphNode.h"
+#include "CAudioGraphEdge.h"
 #include "CAudioGraph.h"
 #include "rapidxml.hpp"
 
@@ -97,9 +99,9 @@ VOID CAudioGraphFile::Parse() {
 
 	// Source: http://stackoverflow.com/questions/18398167/how-to-copy-a-txt-file-to-a-char-array-in-c
 
-	FILE *f = _wfopen(m_Filename.c_str(), L"rb");
+	FILE *f = nullptr; 
 
-	if (f == nullptr) {
+	if (_wfopen_s(&f, m_Filename.c_str(), L"rb") != 0) {
 		m_Callback->OnObjectFailure(FILENAME, __LINE__, HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND));
 		return;
 	}
@@ -152,7 +154,7 @@ VOID CAudioGraphFile::Parse() {
 
 		CComPtr<CAudioGraph> Graph = new CAudioGraph();
 
-		hr = Graph->Initialize(m_Callback, style_string.c_str());
+		hr = Graph->Initialize(m_Callback, style_string.c_str(), this);
 
 		if (SUCCEEDED(hr)) {
 			// Add graph to this file
@@ -169,6 +171,8 @@ VOID CAudioGraphFile::Parse() {
 				style_string += vertex_node->first_attribute("id")->value();
 				style_string += "\"";
 			}
+
+			CComPtr<CAudioGraphNode> Node = new CAudioGraphNode();
 		}
 
 		for (xml_node<>* edge_node = graph_node->first_node("Edge"); edge_node; edge_node = edge_node->next_sibling()) {

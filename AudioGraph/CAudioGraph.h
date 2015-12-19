@@ -25,9 +25,15 @@
 #include <comdef.h>
 #include <atlbase.h>
 #include <Windows.h>
+#include <string>
+#include <vector>
+#include <map>
 
 #include "AudioGraph.h"
 #include "QueryInterface.h"
+#include "CAudioGraphNode.h"
+
+class CAudioGraphFile;
 
 class CAudioGraph : public IAudioGraph {
 public:
@@ -54,10 +60,19 @@ public:
 
 	//New methods
 
-	HRESULT Initialize(IAudioGraphCallback* pAudioGraphCallback, LPCSTR Style);
+	HRESULT Initialize(IAudioGraphCallback* pAudioGraphCallback, LPCSTR Style, IAudioGraphFile* pAudioGraphFile);
 
 private:
 	long m_RefCount;
+
+	CComPtr<IAudioGraphCallback> m_Callback;
+	CComPtr<CAudioGraphFile> m_File;
+
+	std::string m_ID;
+	std::string m_Type;
+	std::string m_StyleString;
+	FLOAT m_Gain;
+	FLOAT m_MixVolume;
 
 	//IUnknown methods
 
@@ -70,16 +85,24 @@ private:
 	//IAudioGraph methods
 
 	/* Returns the ID of this particular graph. */
-	LPCSTR STDMETHODCALLTYPE GetID() final;
+	LPCSTR STDMETHODCALLTYPE GetID() final {
+		return m_ID.c_str();
+	}
 
 	/* Returns an arbitrary type string describing this graph. */
-	LPCSTR STDMETHODCALLTYPE GetType() final;
+	LPCSTR STDMETHODCALLTYPE GetType() final {
+		return m_Type.c_str();
+	}
 
 	/* Returns the style string of this graph. */
-	LPCSTR STDMETHODCALLTYPE GetStyleString() final;
+	LPCSTR STDMETHODCALLTYPE GetStyleString() final {
+		return m_StyleString.c_str();
+	}
 
 	/* Returns the gain of this graph. */
-	FLOAT STDMETHODCALLTYPE GetGain() final;
+	FLOAT STDMETHODCALLTYPE GetGain() final {
+		return m_Gain;
+	}
 
 	/* Creates a node that will be associated with this graph.  Style is a string listing the
 	** attributes of the node, in XML syntax. */
@@ -105,9 +128,16 @@ private:
 
 	/* Gets the mix gain of this graph.  The mix gain is used for mixing/fading between different
 	** audio graphs, where multiple graphs are playing concurrently. */
-	FLOAT STDMETHODCALLTYPE GetMixVolume() final;
+	FLOAT STDMETHODCALLTYPE GetMixVolume() final {
+		return m_MixVolume;
+	}
 
 	/* Sets the mix gain of this graph.  The mix gain is used for mixing/fading between different
 	** audio graphs, where multiple graphs are playing concurrently. */
-	VOID STDMETHODCALLTYPE SetMixVolume(FLOAT Volume) final;
+	VOID STDMETHODCALLTYPE SetMixVolume(FLOAT Volume) final {
+		m_MixVolume = Volume;
+	}
+
+	/* Retrieves the audio graph file that this graph is associated with, if there is one. */
+	VOID STDMETHODCALLTYPE GetAudioGraphFile(IAudioGraphFile** ppAudioGraphFile) final;
 };

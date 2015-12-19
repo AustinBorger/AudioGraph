@@ -1,62 +1,9 @@
-﻿  CDXAudioWriteCallback.cpp
-  CDXAudioStream.cpp
-  CAudioGraphFile.cpp
-c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(129): error C2259: 'CAudioGraph': cannot instantiate abstract class
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(129): note: due to following members:
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(129): note: 'LPCWSTR IAudioGraph::GetID(void)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(118): note: see declaration of 'IAudioGraph::GetID'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(129): note: 'LPCWSTR IAudioGraph::GetType(void)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(121): note: see declaration of 'IAudioGraph::GetType'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(129): note: 'LPCWSTR IAudioGraph::GetStyleString(void)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(124): note: see declaration of 'IAudioGraph::GetStyleString'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(129): note: 'FLOAT IAudioGraph::GetGain(void)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(127): note: see declaration of 'IAudioGraph::GetGain'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(129): note: 'void IAudioGraph::CreateNode(LPCWSTR,IAudioGraphNode **)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(131): note: see declaration of 'IAudioGraph::CreateNode'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(129): note: 'void IAudioGraph::CreateEdge(LPCWSTR,IAudioGraphEdge **)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(135): note: see declaration of 'IAudioGraph::CreateEdge'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(129): note: 'void IAudioGraph::RemoveNode(IAudioGraphNode *)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(139): note: see declaration of 'IAudioGraph::RemoveNode'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(129): note: 'void IAudioGraph::RemoveEdge(IAudioGraphEdge *)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(143): note: see declaration of 'IAudioGraph::RemoveEdge'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(129): note: 'void IAudioGraph::GetNodeByID(LPCWSTR,IAudioGraphNode **)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(146): note: see declaration of 'IAudioGraph::GetNodeByID'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(129): note: 'void IAudioGraph::GetEdgeByID(LPCWSTR,IAudioGraphEdge **)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(149): note: see declaration of 'IAudioGraph::GetEdgeByID'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(129): note: 'FLOAT IAudioGraph::GetMixVolume(void)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(153): note: see declaration of 'IAudioGraph::GetMixVolume'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(129): note: 'void IAudioGraph::SetMixVolume(FLOAT)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(157): note: see declaration of 'IAudioGraph::SetMixVolume'
-c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(134): error C2065: 'ppAudioGraph': undeclared identifier
-c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(139): error C2065: 'ppAudioGraph': undeclared identifier
-c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfile.cpp(100): error C4996: '_wfopen': This function or variable may be unsafe. Consider using _wfopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.10586.0\ucrt\corecrt_wstdio.h(129): note: see declaration of '_wfopen'
-  CAudioGraphFactory.cpp
-c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfactory.cpp(100): error C2259: 'CAudioGraph': cannot instantiate abstract class
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfactory.cpp(100): note: due to following members:
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfactory.cpp(100): note: 'LPCWSTR IAudioGraph::GetID(void)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(118): note: see declaration of 'IAudioGraph::GetID'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfactory.cpp(100): note: 'LPCWSTR IAudioGraph::GetType(void)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(121): note: see declaration of 'IAudioGraph::GetType'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfactory.cpp(100): note: 'LPCWSTR IAudioGraph::GetStyleString(void)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(124): note: see declaration of 'IAudioGraph::GetStyleString'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfactory.cpp(100): note: 'FLOAT IAudioGraph::GetGain(void)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(127): note: see declaration of 'IAudioGraph::GetGain'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfactory.cpp(100): note: 'void IAudioGraph::CreateNode(LPCWSTR,IAudioGraphNode **)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(131): note: see declaration of 'IAudioGraph::CreateNode'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfactory.cpp(100): note: 'void IAudioGraph::CreateEdge(LPCWSTR,IAudioGraphEdge **)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(135): note: see declaration of 'IAudioGraph::CreateEdge'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfactory.cpp(100): note: 'void IAudioGraph::RemoveNode(IAudioGraphNode *)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(139): note: see declaration of 'IAudioGraph::RemoveNode'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfactory.cpp(100): note: 'void IAudioGraph::RemoveEdge(IAudioGraphEdge *)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(143): note: see declaration of 'IAudioGraph::RemoveEdge'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfactory.cpp(100): note: 'void IAudioGraph::GetNodeByID(LPCWSTR,IAudioGraphNode **)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(146): note: see declaration of 'IAudioGraph::GetNodeByID'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfactory.cpp(100): note: 'void IAudioGraph::GetEdgeByID(LPCWSTR,IAudioGraphEdge **)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(149): note: see declaration of 'IAudioGraph::GetEdgeByID'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfactory.cpp(100): note: 'FLOAT IAudioGraph::GetMixVolume(void)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(153): note: see declaration of 'IAudioGraph::GetMixVolume'
-  c:\users\austin\documents\com objects\audiograph\audiograph\caudiographfactory.cpp(100): note: 'void IAudioGraph::SetMixVolume(FLOAT)': is abstract
-  c:\users\austin\documents\com objects\audiograph\audiograph\audiograph.h(157): note: see declaration of 'IAudioGraph::SetMixVolume'
-  AudioGraph.cpp
-  Generating Code...
+﻿  CAudioGraphFile.cpp
+     Creating library C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.lib and object C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.exp
+CAudioGraph.obj : error LNK2001: unresolved external symbol "private: virtual void __stdcall CAudioGraph::CreateNode(char const *,struct IAudioGraphNode * *)" (?CreateNode@CAudioGraph@@EAGXPBDPAPAUIAudioGraphNode@@@Z)
+CAudioGraph.obj : error LNK2001: unresolved external symbol "private: virtual void __stdcall CAudioGraph::CreateEdge(char const *,struct IAudioGraphEdge * *)" (?CreateEdge@CAudioGraph@@EAGXPBDPAPAUIAudioGraphEdge@@@Z)
+CAudioGraph.obj : error LNK2001: unresolved external symbol "private: virtual void __stdcall CAudioGraph::RemoveNode(struct IAudioGraphNode *)" (?RemoveNode@CAudioGraph@@EAGXPAUIAudioGraphNode@@@Z)
+CAudioGraph.obj : error LNK2001: unresolved external symbol "private: virtual void __stdcall CAudioGraph::RemoveEdge(struct IAudioGraphEdge *)" (?RemoveEdge@CAudioGraph@@EAGXPAUIAudioGraphEdge@@@Z)
+CAudioGraph.obj : error LNK2001: unresolved external symbol "private: virtual void __stdcall CAudioGraph::GetNodeByID(char const *,struct IAudioGraphNode * *)" (?GetNodeByID@CAudioGraph@@EAGXPBDPAPAUIAudioGraphNode@@@Z)
+CAudioGraph.obj : error LNK2001: unresolved external symbol "private: virtual void __stdcall CAudioGraph::GetEdgeByID(char const *,struct IAudioGraphEdge * *)" (?GetEdgeByID@CAudioGraph@@EAGXPBDPAPAUIAudioGraphEdge@@@Z)
+C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.dll : fatal error LNK1120: 6 unresolved externals

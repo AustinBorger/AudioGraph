@@ -65,6 +65,9 @@ struct __declspec(uuid("2a4bee1e-2d02-4f9c-bed9-eaedfb95331d")) IAudioGraphEdge 
 
 	/* Retrieves the audio graph that this edge is attached to. */
 	virtual VOID STDMETHODCALLTYPE GetAudioGraph(IAudioGraph** ppAudioGraph) PURE;
+
+	/* Retrieves the audio graph file that this edge is associated with, if there is one. */
+	virtual VOID STDMETHODCALLTYPE GetAudioGraphFile(IAudioGraphFile** ppAudioGraphFile) PURE;
 };
 
 /* IAudioGraphNode represents a node in an audio graph.  It can only be a member of a single audio graph -
@@ -73,8 +76,11 @@ struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode 
 	/* Returns the ID of this particular node. */
 	virtual LPCSTR STDMETHODCALLTYPE GetID() PURE;
 
+	/* Returns the name of the audio file that this node is streamed from. */
+	virtual LPCWSTR STDMETHODCALLTYPE GetAudioFilename() PURE;
+
 	/* Returns the number of edges extending from this particular node. */
-	virtual LONG STDMETHODCALLTYPE GetNumEdges() PURE;
+	virtual UINT STDMETHODCALLTYPE GetNumEdges() PURE;
 
 	/* Retrieves an edge extending from this node by given array index. */
 	virtual VOID STDMETHODCALLTYPE EnumEdge(LONG EdgeNum, IAudioGraphEdge** ppEdge) PURE;
@@ -88,15 +94,12 @@ struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode 
 	/* Returns the gain coefficient associated with this particular node. */
 	virtual FLOAT STDMETHODCALLTYPE GetGain() PURE;
 
-	/* Returns the name of the file that this node streams from. */
-	virtual LPCWSTR STDMETHODCALLTYPE GetFilename() PURE;
-
 	/* Returns the offset this node has from the start of the PCM audio data in the
 	** associated file, in samples. */
-	virtual LONG STDMETHODCALLTYPE GetSampleOffset() PURE;
+	virtual UINT STDMETHODCALLTYPE GetSampleOffset() PURE;
 
 	/* Returns the duration this node will play for, in samples. */
-	virtual LONG STDMETHODCALLTYPE GetSampleDuration() PURE;
+	virtual UINT STDMETHODCALLTYPE GetSampleDuration() PURE;
 
 	/* Returns the offset this node has from the start of the PCM audio data in the
 	** associated file, in seconds. */
@@ -110,6 +113,9 @@ struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode 
 
 	/* Retrieves the audio graph that this node is attatched to. */
 	virtual VOID STDMETHODCALLTYPE GetGraph(IAudioGraph** ppAudioGraph) PURE;
+
+	/* Retrieves the audio graph file that this node is associated with, if there is one. */
+	virtual VOID STDMETHODCALLTYPE GetAudioGraphFile(IAudioGraphFile** ppAudioGraphFile) PURE;
 };
 
 /* IAudioGraph represents a single audio graph, which is composed of nodes and directed edges. */
@@ -155,6 +161,9 @@ struct __declspec(uuid("b1f2bb1c-f1da-4f0a-ba3a-b7dbe2a7c824")) IAudioGraph : pu
 	/* Sets the mix gain of this graph.  The mix gain is used for mixing/fading between different
 	** audio graphs, where multiple graphs are playing concurrently. */
 	virtual VOID STDMETHODCALLTYPE SetMixVolume(FLOAT Volume) PURE;
+
+	/* Retrieves the audio graph file that this graph is associated with, if there is one. */
+	virtual VOID STDMETHODCALLTYPE GetAudioGraphFile(IAudioGraphFile** ppAudioGraphFile) PURE;
 };
 
 /* IAudioGraphFile represents an XML file's state.  It can be loaded and parsed via IAudioGraphFactory::ParseAudioGraphFile().

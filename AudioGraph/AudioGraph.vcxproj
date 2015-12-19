@@ -120,8 +120,10 @@
   <ItemGroup>
     <ClInclude Include="AudioGraph.h" />
     <ClInclude Include="CAudioGraph.h" />
+    <ClInclude Include="CAudioGraphEdge.h" />
     <ClInclude Include="CAudioGraphFactory.h" />
     <ClInclude Include="CAudioGraphFile.h" />
+    <ClInclude Include="CAudioGraphNode.h" />
     <ClInclude Include="CDXAudioDuplexStream.h" />
     <ClInclude Include="CDXAudioEchoStream.h" />
     <ClInclude Include="CDXAudioInputStream.h" />
@@ -140,8 +142,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioGraph.cpp" />
+    <ClCompile Include="CAudioGraph.cpp" />
+    <ClCompile Include="CAudioGraphEdge.cpp" />
     <ClCompile Include="CAudioGraphFactory.cpp" />
     <ClCompile Include="CAudioGraphFile.cpp" />
+    <ClCompile Include="CAudioGraphNode.cpp" />
     <ClCompile Include="CDXAudioDuplexStream.cpp" />
     <ClCompile Include="CDXAudioEchoStream.cpp" />
     <ClCompile Include="CDXAudioInputStream.cpp" />

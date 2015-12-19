@@ -46,6 +46,8 @@
     <ClInclude Include="CDXAudioWriteCallback.h" />
     <ClInclude Include="CAudioGraphFile.h" />
     <ClInclude Include="CAudioGraph.h" />
+    <ClInclude Include="CAudioGraphNode.h" />
+    <ClInclude Include="CAudioGraphEdge.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioGraph.cpp" />
@@ -88,6 +90,9 @@
     </ClCompile>
     <ClCompile Include="CDXAudioWriteCallback.cpp" />
     <ClCompile Include="CAudioGraphFile.cpp" />
+    <ClCompile Include="CAudioGraph.cpp" />
+    <ClCompile Include="CAudioGraphNode.cpp" />
+    <ClCompile Include="CAudioGraphEdge.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="DXAudio">
