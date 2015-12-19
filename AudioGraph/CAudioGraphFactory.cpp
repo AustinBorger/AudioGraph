@@ -76,40 +76,6 @@ VOID CAudioGraphFactory::ParseAudioGraphFile(LPCWSTR Filename, IAudioGraphFile**
 	*ppAudioGraphFile = File;
 }
 
-/* Creates a blank XML file defining a set of audio graphs. */
-VOID CAudioGraphFactory::CreateAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) {
-	HRESULT hr = S_OK;
-
-	CComPtr<CAudioGraphFile> File = new CAudioGraphFile();
-
-	hr = File->Initialize(m_Callback, Filename);
-
-	if (FAILED(hr)) {
-		*ppAudioGraphFile = nullptr;
-		m_Callback->OnObjectFailure(FILENAME, __LINE__, hr);
-		return;
-	}
-
-	*ppAudioGraphFile = File;
-}
-
-/* Creates a blank audio graph. */
-VOID CAudioGraphFactory::CreateAudioGraph(LPCSTR Style, IAudioGraph** ppAudioGraph) {
-	HRESULT hr = S_OK;
-
-	CComPtr<CAudioGraph> Graph = new CAudioGraph();
-
-	hr = Graph->Initialize(m_Callback, Style, nullptr);
-
-	if (FAILED(hr)) {
-		*ppAudioGraph = nullptr;
-		m_Callback->OnObjectFailure(FILENAME, __LINE__, hr);
-		return;
-	}
-
-	*ppAudioGraph = Graph;
-}
-
 VOID CAudioGraphFactory::QueueAudioGraph(IAudioGraph* pAudioGraph) {
 	m_WriteCallback->QueueAudioGraph(pAudioGraph);
 }

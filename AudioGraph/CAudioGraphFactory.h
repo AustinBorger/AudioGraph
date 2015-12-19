@@ -82,12 +82,6 @@ private:
 	/* Parses an XML file defining a set of audio graphs. */
 	VOID STDMETHODCALLTYPE ParseAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) final;
 
-	/* Creates a blank XML file defining a set of audio graphs. */
-	VOID STDMETHODCALLTYPE CreateAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) final;
-
-	/* Creates a blank audio graph. */
-	VOID STDMETHODCALLTYPE CreateAudioGraph(LPCSTR Style, IAudioGraph** ppAudioGraph) final;
-
 	/* Places an audio graph in the playback queue. */
 	VOID STDMETHODCALLTYPE QueueAudioGraph(IAudioGraph* pAudioGraph) final;
 };

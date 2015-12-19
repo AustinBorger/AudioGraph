@@ -109,22 +109,6 @@ private:
 		return m_StyleString.c_str();
 	}
 
-	/* Creates a node that will be associated with this graph.  Style is a string listing the
-	** attributes of the node, in XML syntax. */
-	VOID STDMETHODCALLTYPE CreateNode(LPCSTR Style, IAudioGraphNode** ppNode) final;
-
-	/* Creates an edge that will be associated with this graph.  Style is a string listing the
-	** attributes of the edge, in XML syntax. */
-	VOID STDMETHODCALLTYPE CreateEdge(LPCSTR Style, IAudioGraphEdge** ppEdge) final;
-
-	/* Removes a node associated with this graph.  Note that the application is still
-	** expected to release any references to the node. */
-	VOID STDMETHODCALLTYPE RemoveNode(IAudioGraphNode* pNode) final;
-
-	/* Removes an edge associated with this graph.  Note that the application is still
-	** expected to release any references to the edge. */
-	VOID STDMETHODCALLTYPE RemoveEdge(IAudioGraphEdge* pEdge) final;
-
 	/* Returns the number of nodes associated with this particular graph. */
 	UINT STDMETHODCALLTYPE GetNumNodes() final {
 		return m_NodeEnum.size();

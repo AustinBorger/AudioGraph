@@ -123,22 +123,6 @@ struct __declspec(uuid("b1f2bb1c-f1da-4f0a-ba3a-b7dbe2a7c824")) IAudioGraph : pu
 	/* Returns the style string of this graph. */
 	virtual LPCSTR STDMETHODCALLTYPE GetStyleString() PURE;
 
-	/* Creates a node that will be associated with this graph.  Style is a string listing the
-	** attributes of the node, in XML syntax. */
-	virtual VOID STDMETHODCALLTYPE CreateNode(LPCSTR Style, IAudioGraphNode** ppNode) PURE;
-
-	/* Creates an edge that will be associated with this graph.  Style is a string listing the
-	** attributes of the edge, in XML syntax. */
-	virtual VOID STDMETHODCALLTYPE CreateEdge(LPCSTR Style, IAudioGraphEdge** ppEdge) PURE;
-
-	/* Removes a node associated with this graph.  Note that the application is still
-	** expected to release any references to the node. */
-	virtual VOID STDMETHODCALLTYPE RemoveNode(IAudioGraphNode* pNode) PURE;
-
-	/* Removes an edge associated with this graph.  Note that the application is still
-	** expected to release any references to the edge. */
-	virtual VOID STDMETHODCALLTYPE RemoveEdge(IAudioGraphEdge* pEdge) PURE;
-
 	/* Returns the number of nodes associated with this particular graph. */
 	virtual UINT STDMETHODCALLTYPE GetNumNodes() PURE;
 
@@ -175,12 +159,6 @@ struct __declspec(uuid("91a4fdda-c694-4c6c-b33e-78a04545eeaa")) IAudioGraphFile 
 
 	/* Retrieves a graph based on a given graph identifier. */
 	virtual VOID STDMETHODCALLTYPE GetGraphByID(LPCSTR ID, IAudioGraph** ppAudioGraph) PURE;
-
-	/* Appends an existing audio graph to the file. */
-	virtual VOID STDMETHODCALLTYPE AppendGraph(IAudioGraph* pAudioGraph) PURE;
-
-	/* Saves the file to disk in XML format. */
-	virtual VOID STDMETHODCALLTYPE Save() PURE;
 };
 
 /* IAudioGraphFactory provides several APIs to create audio graphs.  It also provides the connection
@@ -188,12 +166,6 @@ struct __declspec(uuid("91a4fdda-c694-4c6c-b33e-78a04545eeaa")) IAudioGraphFile 
 struct __declspec(uuid("b824c4eb-5a50-4706-8c14-bcc2f207d6ee")) IAudioGraphFactory : public IUnknown {
 	/* Parses an XML file defining a set of audio graphs. */
 	virtual VOID STDMETHODCALLTYPE ParseAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) PURE;
-
-	/* Creates a blank XML file defining a set of audio graphs. */
-	virtual VOID STDMETHODCALLTYPE CreateAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) PURE;
-
-	/* Creates a blank audio graph. */
-	virtual VOID STDMETHODCALLTYPE CreateAudioGraph(LPCSTR Style, IAudioGraph** ppAudioGraph) PURE;
 
 	/* Places an audio graph in the playback queue. */
 	virtual VOID STDMETHODCALLTYPE QueueAudioGraph(IAudioGraph* pAudioGraph) PURE;

@@ -42,10 +42,6 @@ HRESULT CAudioGraphFile::Initialize(IAudioGraphCallback* pAudioGraphCallback, LP
 	return S_OK;
 }
 
-UINT CAudioGraphFile::GetNumGraphs() {
-	return m_GraphEnum.size();
-}
-
 VOID CAudioGraphFile::EnumGraph(UINT GraphNum, IAudioGraph** ppAudioGraph) {
 	if (ppAudioGraph == nullptr) {
 		m_Callback->OnObjectFailure(FILENAME, __LINE__, E_POINTER);
@@ -76,20 +72,6 @@ VOID CAudioGraphFile::GetGraphByID(LPCSTR ID, IAudioGraph** ppAudioGraph) {
 		m_Callback->OnObjectFailure(FILENAME, __LINE__, E_INVALIDARG);
 		return;
 	}
-}
-
-LPCWSTR CAudioGraphFile::GetFilename() {
-	return m_Filename.c_str();
-}
-
-VOID CAudioGraphFile::AppendGraph(IAudioGraph* pAudioGraph) {
-	CComPtr<IAudioGraph> l_AudioGraph = pAudioGraph;
-
-	m_GraphEnum.push_back(l_AudioGraph);
-	
-	std::string stringID = l_AudioGraph->GetID();
-
-	m_GraphMap[stringID] = l_AudioGraph;
 }
 
 VOID CAudioGraphFile::Parse() {
@@ -180,8 +162,4 @@ VOID CAudioGraphFile::Parse() {
 	}
 
 	free(content);
-}
-
-VOID CAudioGraphFile::Save() {
-
 }

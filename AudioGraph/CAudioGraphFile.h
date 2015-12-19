@@ -65,6 +65,7 @@ private:
 	long m_RefCount;
 
 	CComPtr<IAudioGraphCallback> m_Callback;
+
 	std::wstring m_Filename;
 	std::vector<CComPtr<IAudioGraph>> m_GraphEnum;
 	std::map<std::string, CComPtr<IAudioGraph>> m_GraphMap;
@@ -79,21 +80,19 @@ private:
 
 	//IAudioGraphFile methods
 
+	/* Returns the object's filename. */
+	LPCWSTR STDMETHODCALLTYPE GetFilename() final {
+		return m_Filename.c_str();
+	}
+
 	/* Returns the number of graphs contained in this file. */
-	UINT STDMETHODCALLTYPE GetNumGraphs() final;
+	UINT STDMETHODCALLTYPE GetNumGraphs() final {
+		return m_GraphEnum.size();
+	}
 
 	/* Retrieves a graph based on the given array index. */
 	VOID STDMETHODCALLTYPE EnumGraph(UINT GraphNum, IAudioGraph** ppAudioGraph) final;
 
 	/* Retrieves a graph based on a given graph identifier. */
 	VOID STDMETHODCALLTYPE GetGraphByID(LPCSTR ID, IAudioGraph** ppAudioGraph) final;
-
-	/* Returns the object's filename. */
-	LPCWSTR STDMETHODCALLTYPE GetFilename() final;
-
-	/* Appends an existing audio graph to the file. */
-	VOID STDMETHODCALLTYPE AppendGraph(IAudioGraph* pAudioGraph) final;
-
-	/* Saves the file to disk in XML format. */
-	VOID STDMETHODCALLTYPE Save() final;
 };
