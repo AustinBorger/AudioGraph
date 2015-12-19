@@ -59,13 +59,13 @@ VOID CAudioGraphFile::EnumGraph(UINT GraphNum, IAudioGraph** ppAudioGraph) {
 	}
 }
 
-VOID CAudioGraphFile::GetGraphByID(LPCWSTR ID, IAudioGraph** ppAudioGraph) {
+VOID CAudioGraphFile::GetGraphByID(LPCSTR ID, IAudioGraph** ppAudioGraph) {
 	if (ppAudioGraph == nullptr) {
 		m_Callback->OnObjectFailure(FILENAME, __LINE__, E_POINTER);
 		return;
 	}
 
-	std::wstring stringID = ID;
+	std::string stringID = ID;
 
 	try {
 		*ppAudioGraph = m_GraphMap.at(stringID);
@@ -85,7 +85,7 @@ VOID CAudioGraphFile::AppendGraph(IAudioGraph* pAudioGraph) {
 
 	m_GraphEnum.push_back(l_AudioGraph);
 	
-	std::wstring stringID = l_AudioGraph->GetID();
+	std::string stringID = l_AudioGraph->GetID();
 
 	m_GraphMap[stringID] = l_AudioGraph;
 }
@@ -125,15 +125,29 @@ VOID CAudioGraphFile::Parse() {
 		std::string style_string;
 
 		if (strcmp(graph_node->first_attribute("id")->value(), "") != 0) {
-			style_string += "id = ";
+			style_string += "id = \"";
 			style_string += graph_node->first_attribute("id")->value();
-			style_string += " ";
+			style_string += "\"";
 		}
 
 		if (strcmp(graph_node->first_attribute("gain")->value(), "") != 0) {
-			style_string += "gain = ";
+			if (!style_string.empty()) {
+				style_string += " ";
+			}
+
+			style_string += "gain = \"";
 			style_string += graph_node->first_attribute("gain")->value();
-			style_string += " ";
+			style_string += "\"";
+		}
+
+		if (strcmp(graph_node->first_attribute("type")->value(), "") != 0) {
+			if (!style_string.empty()) {
+				style_string += " ";
+			}
+
+			style_string += "type = \"";
+			style_string += graph_node->first_attribute("gain")->value();
+			style_string += "\"";
 		}
 
 		CComPtr<CAudioGraph> Graph = new CAudioGraph();
@@ -144,15 +158,21 @@ VOID CAudioGraphFile::Parse() {
 			// Add graph to this file
 			CComPtr<IAudioGraph> I_Graph = Graph;
 			m_GraphEnum.push_back(I_Graph);
-			m_GraphMap[I_Graph->GetID()];
+			m_GraphMap[I_Graph->GetID()] = I_Graph;
 		}
 
 		for (xml_node<>* vertex_node = graph_node->first_node("Node"); vertex_node; vertex_node = vertex_node->next_sibling()) {
+			style_string = "";
 
+			if (strcmp(vertex_node->first_attribute("id")->value(), "") != 0) {
+				style_string += "id = \"";
+				style_string += vertex_node->first_attribute("id")->value();
+				style_string += "\"";
+			}
 		}
 
 		for (xml_node<>* edge_node = graph_node->first_node("Edge"); edge_node; edge_node = edge_node->next_sibling()) {
-
+			style_string = "";
 		}
 	}
 

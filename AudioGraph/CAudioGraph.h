@@ -66,4 +66,48 @@ private:
 		QUERY_INTERFACE_CAST(IUnknown);
 		QUERY_INTERFACE_FAIL();
 	}
+
+	//IAudioGraph methods
+
+	/* Returns the ID of this particular graph. */
+	LPCSTR STDMETHODCALLTYPE GetID() final;
+
+	/* Returns an arbitrary type string describing this graph. */
+	LPCSTR STDMETHODCALLTYPE GetType() final;
+
+	/* Returns the style string of this graph. */
+	LPCSTR STDMETHODCALLTYPE GetStyleString() final;
+
+	/* Returns the gain of this graph. */
+	FLOAT STDMETHODCALLTYPE GetGain() final;
+
+	/* Creates a node that will be associated with this graph.  Style is a string listing the
+	** attributes of the node, in XML syntax. */
+	VOID STDMETHODCALLTYPE CreateNode(LPCSTR Style, IAudioGraphNode** ppNode) final;
+
+	/* Creates an edge that will be associated with this graph.  Style is a string listing the
+	** attributes of the edge, in XML syntax. */
+	VOID STDMETHODCALLTYPE CreateEdge(LPCSTR Style, IAudioGraphEdge** ppEdge) final;
+
+	/* Removes a node associated with this graph.  Note that the application is still
+	** expected to release any references to the node. */
+	VOID STDMETHODCALLTYPE RemoveNode(IAudioGraphNode* pNode) final;
+
+	/* Removes an edge associated with this graph.  Note that the application is still
+	** expected to release any references to the edge. */
+	VOID STDMETHODCALLTYPE RemoveEdge(IAudioGraphEdge* pEdge) final;
+
+	/* Retrieves a node based on a given node identifier. */
+	VOID STDMETHODCALLTYPE GetNodeByID(LPCSTR ID, IAudioGraphNode** ppNode) final;
+
+	/* Retrieves an edge based on a given edge identifier. */
+	VOID STDMETHODCALLTYPE GetEdgeByID(LPCSTR ID, IAudioGraphEdge** ppEdge) final;
+
+	/* Gets the mix gain of this graph.  The mix gain is used for mixing/fading between different
+	** audio graphs, where multiple graphs are playing concurrently. */
+	FLOAT STDMETHODCALLTYPE GetMixVolume() final;
+
+	/* Sets the mix gain of this graph.  The mix gain is used for mixing/fading between different
+	** audio graphs, where multiple graphs are playing concurrently. */
+	VOID STDMETHODCALLTYPE SetMixVolume(FLOAT Volume) final;
 };

@@ -67,7 +67,7 @@ private:
 	CComPtr<IAudioGraphCallback> m_Callback;
 	std::wstring m_Filename;
 	std::vector<CComPtr<IAudioGraph>> m_GraphEnum;
-	std::map<std::wstring, CComPtr<IAudioGraph>> m_GraphMap;
+	std::map<std::string, CComPtr<IAudioGraph>> m_GraphMap;
 
 	//IUnknown methods
 
@@ -86,7 +86,7 @@ private:
 	VOID STDMETHODCALLTYPE EnumGraph(UINT GraphNum, IAudioGraph** ppAudioGraph) final;
 
 	/* Retrieves a graph based on a given graph identifier. */
-	VOID STDMETHODCALLTYPE GetGraphByID(LPCWSTR ID, IAudioGraph** ppAudioGraph) final;
+	VOID STDMETHODCALLTYPE GetGraphByID(LPCSTR ID, IAudioGraph** ppAudioGraph) final;
 
 	/* Returns the object's filename. */
 	LPCWSTR STDMETHODCALLTYPE GetFilename() final;
