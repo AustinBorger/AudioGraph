@@ -25,6 +25,8 @@
 #include "CAudioGraphFile.h"
 #include "CAudioGraphEdge.h"
 
+#include <algorithm>
+
 #define FILENAME L"CAudioGraphNode.cpp"
 
 CAudioGraphNode::CAudioGraphNode() : m_RefCount(1) { }
@@ -35,13 +37,39 @@ HRESULT CAudioGraphNode::Initialize (
 	IAudioGraphCallback* pCallback,
 	CAudioGraphFile* pFile,
 	CAudioGraph* pGraph,
-	LPCSTR Style
+	std::string& Style
 ) {
 	m_Callback = pCallback;
 	m_File = pFile;
 	m_Graph = pGraph;
+	m_StyleString = Style;
 
 	// Parse style string
+
+	static const auto attribute = [&Style](LPCSTR attribute) {
+		size_t off = Style.find(attribute, 0);
+		size_t start = off + 4;
+		size_t end = Style.find("\"", start);
+		size_t length = end - start;
+		return Style.substr(start, length);
+	};
+
+	m_ID = attribute("id");
+	m_AudioFilename = attribute("filename");
+	std::string sampleOffsetString = attribute("offset");
+	std::string sampleDurationString = attribute("duration");
+
+	// All attributes must be defined.
+	if (m_ID == "" || m_AudioFilename == "" || sampleOffsetString == "" || sampleDurationString == "") {
+		return E_INVALIDARG;
+	}
+
+	try {
+		m_SampleOffset = std::atoi(sampleOffsetString.c_str());
+		m_SampleDuration = std::atoi(sampleDurationString.c_str());
+	} catch (...) {
+		return E_INVALIDARG;
+	}
 
 	return S_OK;
 }

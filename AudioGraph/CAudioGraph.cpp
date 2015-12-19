@@ -31,21 +31,39 @@ CAudioGraph::CAudioGraph() : m_RefCount(1) { }
 
 CAudioGraph::~CAudioGraph() { }
 
-HRESULT CAudioGraph::Initialize(IAudioGraphCallback* pAudioGraphCallback, LPCSTR Style, CAudioGraphFile* pAudioGraphFile) {
+HRESULT CAudioGraph::Initialize (
+	IAudioGraphCallback* pAudioGraphCallback,
+	CAudioGraphFile* pAudioGraphFile,
+	std::string& Style
+) {
 	HRESULT hr = S_OK;
 
 	m_Callback = pAudioGraphCallback;
-
 	m_File = pAudioGraphFile;
+	m_StyleString = Style;
 
 	// Parse style string
 
-	m_StyleString = Style;
+	static const auto attribute = [&Style](LPCSTR attribute) {
+		size_t off = Style.find(attribute, 0);
+		size_t start = off + 4;
+		size_t end = Style.find("\"", start);
+		size_t length = end - start;
+		return Style.substr(start, length);
+	};
+
+	m_ID = attribute("id");
+	m_Type = attribute("type");
+
+	// ID must be defined, but type is optional.
+	if (m_ID == "") {
+		return E_INVALIDARG;
+	}
 
 	return S_OK;
 }
 
-VOID CAudioGraph::CreateNode(LPCSTR Style) {
+VOID CAudioGraph::CreateNode(std::string& Style) {
 	HRESULT hr = S_OK;
 
 	CComPtr<CAudioGraphNode> Node = new CAudioGraphNode();
@@ -63,7 +81,7 @@ VOID CAudioGraph::CreateNode(LPCSTR Style) {
 	}
 }
 
-VOID CAudioGraph::CreateEdge(LPCSTR Style) {
+VOID CAudioGraph::CreateEdge(std::string& Style) {
 	HRESULT hr = S_OK;
 
 	CComPtr<CAudioGraphEdge> Edge = new CAudioGraphEdge();
@@ -78,6 +96,14 @@ VOID CAudioGraph::CreateEdge(LPCSTR Style) {
 	if (SUCCEEDED(hr)) {
 		m_EdgeEnum.push_back(Edge);
 		m_EdgeMap[Edge->GetID()] = Edge;
+	}
+}
+
+VOID CAudioGraph::GetNodeByID(std::string& ID, CAudioGraphNode** ppNode) {
+	try {
+		*ppNode = m_NodeMap.at(ID);
+	} catch (...) {
+		*ppNode = nullptr;
 	}
 }
 

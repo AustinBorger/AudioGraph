@@ -35,13 +35,34 @@ HRESULT CAudioGraphEdge::Initialize (
 	IAudioGraphCallback* pCallback,
 	CAudioGraphFile* pFile,
 	CAudioGraph* pGraph,
-	LPCSTR Style
+	std::string& Style
 ) {
 	m_Callback = pCallback;
 	m_File = pFile;
 	m_Graph = pGraph;
+	m_StyleString = Style;
 
 	// Parse style string
+
+	static const auto attribute = [&Style](LPCSTR attribute) {
+		size_t off = Style.find(attribute, 0);
+		size_t start = off + 4;
+		size_t end = Style.find("\"", start);
+		size_t length = end - start;
+		return Style.substr(start, length);
+	};
+
+	m_ID = attribute("id");
+	m_Trigger = attribute("trigger");
+	std::string toString = attribute("to");
+	std::string fromString = attribute("from");
+	m_Graph->GetNodeByID(toString, &m_To);
+	m_Graph->GetNodeByID(fromString, &m_From);
+
+	// All attributes must be defined.
+	if (m_To == nullptr || m_From == nullptr || m_Trigger == "" || m_ID == "") {
+		return E_INVALIDARG;
+	}
 
 	return S_OK;
 }

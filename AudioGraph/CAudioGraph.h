@@ -103,13 +103,20 @@ public:
 
 	//New methods
 
-	HRESULT Initialize(IAudioGraphCallback* pAudioGraphCallback, LPCSTR Style, CAudioGraphFile* pAudioGraphFile);
+	HRESULT Initialize (
+		IAudioGraphCallback* pAudioGraphCallback,
+		CAudioGraphFile* pAudioGraphFile,
+		std::string& Style
+	);
 
 	/* To be used by CAudioGraphFile when parsing. */
-	VOID CreateNode(LPCSTR Style);
+	VOID CreateNode(std::string& Style);
 
 	/* To be used by CAudioGraphFile when parsing. */
-	VOID CreateEdge(LPCSTR Style);
+	VOID CreateEdge(std::string& Style);
+
+	/* To be used by CAudioGraphEdge. */
+	VOID GetNodeByID(std::string& ID, CAudioGraphNode** ppNode);
 
 private:
 	long m_RefCount;

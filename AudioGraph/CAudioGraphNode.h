@@ -121,7 +121,7 @@ public:
 		IAudioGraphCallback* pCallback,
 		CAudioGraphFile* pFile,
 		CAudioGraph* pGraph,
-		LPCSTR Style
+		std::string& Style
 	);
 
 private:

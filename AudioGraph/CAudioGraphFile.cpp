@@ -106,16 +106,18 @@ VOID CAudioGraphFile::Parse() {
 	std::string style_string;
 
 	static const auto attribute = [&style_string](xml_node<>* node, LPCSTR attribute) {
-		if (strcmp(node->first_attribute(attribute)->value(), "") != 0) {
-			if (!style_string.empty()) {
-				style_string += " ";
-			}
-
-			style_string += attribute;
-			style_string += " = \"";
-			style_string += node->first_attribute(attribute)->value();
-			style_string += "\"";
+		if (!style_string.empty()) {
+			style_string += " ";
 		}
+
+		style_string += attribute;
+		style_string += " = \"";
+
+		if (strcmp(node->first_attribute(attribute)->value(), "") != 0) {
+			style_string += node->first_attribute(attribute)->value();
+		}
+
+		style_string += "\"";
 	};
 
 	for (xml_node<>* graph_node = root_node->first_node("Graph"); graph_node; graph_node = graph_node->next_sibling()) {
@@ -127,7 +129,7 @@ VOID CAudioGraphFile::Parse() {
 
 		CComPtr<CAudioGraph> Graph = new CAudioGraph();
 
-		hr = Graph->Initialize(m_Callback, style_string.c_str(), this);
+		hr = Graph->Initialize(m_Callback, this, style_string);
 
 		if (SUCCEEDED(hr)) {
 			// Add graph to this file
@@ -145,7 +147,7 @@ VOID CAudioGraphFile::Parse() {
 			attribute(vertex_node, "offset");
 			attribute(vertex_node, "duration");
 
-			Graph->CreateNode(style_string.c_str());
+			Graph->CreateNode(style_string);
 		}
 
 		for (xml_node<>* edge_node = graph_node->first_node("Edge"); edge_node; edge_node = edge_node->next_sibling()) {
@@ -157,7 +159,7 @@ VOID CAudioGraphFile::Parse() {
 			attribute(edge_node, "to");
 			attribute(edge_node, "from");
 
-			Graph->CreateEdge(style_string.c_str());
+			Graph->CreateEdge(style_string);
 		}
 	}
 
