@@ -161,10 +161,10 @@ struct __declspec(uuid("b1f2bb1c-f1da-4f0a-ba3a-b7dbe2a7c824")) IAudioGraph : pu
 ** It can also be saved at runtime, allowing an application to dynamically create saved audio graph content. */
 struct __declspec(uuid("91a4fdda-c694-4c6c-b33e-78a04545eeaa")) IAudioGraphFile : public IUnknown {
 	/* Returns the number of graphs contained in this file. */
-	virtual LONG STDMETHODCALLTYPE GetNumGraphs() PURE;
+	virtual UINT STDMETHODCALLTYPE GetNumGraphs() PURE;
 
 	/* Retrieves a graph based on the given array index. */
-	virtual VOID STDMETHODCALLTYPE EnumGraph(LONG GraphNum, IAudioGraph** ppAudioGraph) PURE;
+	virtual VOID STDMETHODCALLTYPE EnumGraph(UINT GraphNum, IAudioGraph** ppAudioGraph) PURE;
 
 	/* Retrieves a graph based on a given graph identifier. */
 	virtual VOID STDMETHODCALLTYPE GetGraphByID(LPCWSTR ID, IAudioGraph** ppAudioGraph) PURE;
@@ -189,7 +189,7 @@ struct __declspec(uuid("b824c4eb-5a50-4706-8c14-bcc2f207d6ee")) IAudioGraphFacto
 	virtual VOID STDMETHODCALLTYPE CreateAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) PURE;
 
 	/* Creates a blank audio graph. */
-	virtual VOID STDMETHODCALLTYPE CreateAudioGraph(LPCWSTR Style, IAudioGraph** ppAudioGraph) PURE;
+	virtual VOID STDMETHODCALLTYPE CreateAudioGraph(LPCSTR Style, IAudioGraph** ppAudioGraph) PURE;
 };
 
 #ifndef _AUDIO_GRAPH_EXPORT_TAG

@@ -119,7 +119,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AudioGraph.h" />
+    <ClInclude Include="CAudioGraph.h" />
     <ClInclude Include="CAudioGraphFactory.h" />
+    <ClInclude Include="CAudioGraphFile.h" />
     <ClInclude Include="CDXAudioDuplexStream.h" />
     <ClInclude Include="CDXAudioEchoStream.h" />
     <ClInclude Include="CDXAudioInputStream.h" />
@@ -139,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="AudioGraph.cpp" />
     <ClCompile Include="CAudioGraphFactory.cpp" />
+    <ClCompile Include="CAudioGraphFile.cpp" />
     <ClCompile Include="CDXAudioDuplexStream.cpp" />
     <ClCompile Include="CDXAudioEchoStream.cpp" />
     <ClCompile Include="CDXAudioInputStream.cpp" />
@@ -146,6 +149,7 @@
     <ClCompile Include="CDXAudioOutputStream.cpp" />
     <ClCompile Include="CDXAudioResampler.cpp" />
     <ClCompile Include="CDXAudioStream.cpp" />
+    <ClCompile Include="CDXAudioWriteCallback.cpp" />
     <ClCompile Include="ClientReader.cpp" />
     <ClCompile Include="ClientWriter.cpp" />
     <ClCompile Include="CMMNotificationClient.cpp" />

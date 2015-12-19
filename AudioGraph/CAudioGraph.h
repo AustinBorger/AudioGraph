@@ -26,15 +26,14 @@
 #include <atlbase.h>
 #include <Windows.h>
 
-#include "DXAudio.h"
 #include "AudioGraph.h"
 #include "QueryInterface.h"
 
-class CDXAudioWriteCallback : public IDXAudioWriteCallback {
+class CAudioGraph : public IAudioGraph {
 public:
-	CDXAudioWriteCallback();
+	CAudioGraph();
 
-	~CDXAudioWriteCallback();
+	~CAudioGraph();
 
 	//IUnknown methods
 
@@ -46,7 +45,7 @@ public:
 		m_RefCount--;
 
 		if (m_RefCount <= 0) {
-			this->~CDXAudioWriteCallback(); //don't use delete, since placement new is used by CAudioGraphFactory
+			delete this;
 			return 0;
 		}
 
@@ -55,27 +54,16 @@ public:
 
 	//New methods
 
-	HRESULT Initialize(IAudioGraphCallback* pAudioGraphCallback);
+	HRESULT Initialize(IAudioGraphCallback* pAudioGraphCallback, LPCSTR Style);
 
 private:
 	long m_RefCount;
 
-	CComPtr<IAudioGraphCallback> m_Callback;
-
 	//IUnknown methods
 
 	STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject) final {
-		QUERY_INTERFACE_CAST(IDXAudioWriteCallback);
-		QUERY_INTERFACE_CAST(IDXAudioCallback);
+		QUERY_INTERFACE_CAST(IAudioGraph);
 		QUERY_INTERFACE_CAST(IUnknown);
 		QUERY_INTERFACE_FAIL();
 	}
-
-	//IDXAudioWriteCallback methods
-
-	VOID STDMETHODCALLTYPE OnObjectFailure(LPCWSTR File, UINT Line, HRESULT hr) final;
-
-	VOID STDMETHODCALLTYPE OnProcess(FLOAT SampleRate, FLOAT* OutputBuffer, UINT BufferFrames) final;
-
-	VOID STDMETHODCALLTYPE OnThreadInit() final;
 };

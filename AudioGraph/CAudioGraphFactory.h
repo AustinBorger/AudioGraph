@@ -25,11 +25,13 @@
 #include <comdef.h>
 #include <atlbase.h>
 #include <Windows.h>
+#include <vector>
 
 #include "AudioGraph.h"
 #include "QueryInterface.h"
 #include "DXAudio.h"
 #include "CDXAudioWriteCallback.h"
+#include "CAudioGraphFile.h"
 
 class CAudioGraphFactory : public IAudioGraphFactory {
 public:
@@ -65,7 +67,7 @@ private:
 	CComPtr<IDXAudioStream> m_Stream;
 	CComPtr<CDXAudioWriteCallback> m_WriteCallback;
 
-	// Ensures that memory used for m_WriteCallback is sequential to the factory.
+	// Memory blocks below ensure that objects are sequential to the factory.
 	BYTE _memblockWriteCallback[sizeof(CDXAudioWriteCallback)];
 
 	//IUnknown methods
@@ -85,5 +87,5 @@ private:
 	VOID STDMETHODCALLTYPE CreateAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) final;
 
 	/* Creates a blank audio graph. */
-	VOID STDMETHODCALLTYPE CreateAudioGraph(LPCWSTR Style, IAudioGraph** ppAudioGraph) final;
+	VOID STDMETHODCALLTYPE CreateAudioGraph(LPCSTR Style, IAudioGraph** ppAudioGraph) final;
 };

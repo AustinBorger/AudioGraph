@@ -25,16 +25,18 @@
 #include <comdef.h>
 #include <atlbase.h>
 #include <Windows.h>
+#include <string>
+#include <vector>
+#include <map>
 
-#include "DXAudio.h"
 #include "AudioGraph.h"
 #include "QueryInterface.h"
 
-class CDXAudioWriteCallback : public IDXAudioWriteCallback {
+class CAudioGraphFile : public IAudioGraphFile {
 public:
-	CDXAudioWriteCallback();
+	CAudioGraphFile();
 
-	~CDXAudioWriteCallback();
+	~CAudioGraphFile();
 
 	//IUnknown methods
 
@@ -46,7 +48,7 @@ public:
 		m_RefCount--;
 
 		if (m_RefCount <= 0) {
-			this->~CDXAudioWriteCallback(); //don't use delete, since placement new is used by CAudioGraphFactory
+			delete this;
 			return 0;
 		}
 
@@ -55,27 +57,43 @@ public:
 
 	//New methods
 
-	HRESULT Initialize(IAudioGraphCallback* pAudioGraphCallback);
+	HRESULT Initialize(IAudioGraphCallback* pAudioGraphCallback, LPCWSTR Filename);
+
+	VOID Parse();
 
 private:
 	long m_RefCount;
 
 	CComPtr<IAudioGraphCallback> m_Callback;
+	std::wstring m_Filename;
+	std::vector<CComPtr<IAudioGraph>> m_GraphEnum;
+	std::map<std::wstring, CComPtr<IAudioGraph>> m_GraphMap;
 
 	//IUnknown methods
 
 	STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject) final {
-		QUERY_INTERFACE_CAST(IDXAudioWriteCallback);
-		QUERY_INTERFACE_CAST(IDXAudioCallback);
+		QUERY_INTERFACE_CAST(IAudioGraphFile);
 		QUERY_INTERFACE_CAST(IUnknown);
 		QUERY_INTERFACE_FAIL();
 	}
 
-	//IDXAudioWriteCallback methods
+	//IAudioGraphFile methods
 
-	VOID STDMETHODCALLTYPE OnObjectFailure(LPCWSTR File, UINT Line, HRESULT hr) final;
+	/* Returns the number of graphs contained in this file. */
+	UINT STDMETHODCALLTYPE GetNumGraphs() final;
 
-	VOID STDMETHODCALLTYPE OnProcess(FLOAT SampleRate, FLOAT* OutputBuffer, UINT BufferFrames) final;
+	/* Retrieves a graph based on the given array index. */
+	VOID STDMETHODCALLTYPE EnumGraph(UINT GraphNum, IAudioGraph** ppAudioGraph) final;
 
-	VOID STDMETHODCALLTYPE OnThreadInit() final;
+	/* Retrieves a graph based on a given graph identifier. */
+	VOID STDMETHODCALLTYPE GetGraphByID(LPCWSTR ID, IAudioGraph** ppAudioGraph) final;
+
+	/* Returns the object's filename. */
+	LPCWSTR STDMETHODCALLTYPE GetFilename() final;
+
+	/* Appends an existing audio graph to the file. */
+	VOID STDMETHODCALLTYPE AppendGraph(IAudioGraph* pAudioGraph) final;
+
+	/* Saves the file to disk in XML format. */
+	VOID STDMETHODCALLTYPE Save() final;
 };

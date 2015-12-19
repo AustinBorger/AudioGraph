@@ -21,8 +21,10 @@
 */
 
 #include "CAudioGraphFactory.h"
+#include "CAudioGraph.h"
 
 #define FILENAME L"CAudioGraphFactory.cpp"
+#define RETURN_HR(Line) if (FAILED(hr)) return hr
 #define CHECK_HR(Line) if (FAILED(hr)) { m_Callback->OnObjectFailure(FILENAME, Line, hr); return hr; }
 
 CAudioGraphFactory::CAudioGraphFactory() : m_RefCount(1) { }
@@ -42,13 +44,13 @@ HRESULT CAudioGraphFactory::Initialize(IAudioGraphCallback* pAudioGraphCallback)
 
 	hr = m_WriteCallback->Initialize (
 		m_Callback
-	); CHECK_HR(__LINE__);
+	); RETURN_HR(__LINE__);
 
 	hr = DXAudioCreateStream (
 		&StreamDesc,
 		m_WriteCallback,
 		&m_Stream
-	); CHECK_HR(__LINE__);
+	); RETURN_HR(__LINE__);
 
 	m_Stream->Start();
 
@@ -57,15 +59,53 @@ HRESULT CAudioGraphFactory::Initialize(IAudioGraphCallback* pAudioGraphCallback)
 
 /* Parses an XML file defining a set of audio graphs. */
 VOID CAudioGraphFactory::ParseAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) {
+	HRESULT hr = S_OK;
 
+	CComPtr<CAudioGraphFile> File = new CAudioGraphFile();
+
+	hr = File->Initialize(m_Callback, Filename);
+
+	if (FAILED(hr)) {
+		*ppAudioGraphFile = nullptr;
+		m_Callback->OnObjectFailure(FILENAME, __LINE__, hr);
+		return;
+	}
+
+	File->Parse();
+
+	*ppAudioGraphFile = File;
 }
 
 /* Creates a blank XML file defining a set of audio graphs. */
 VOID CAudioGraphFactory::CreateAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) {
+	HRESULT hr = S_OK;
 
+	CComPtr<CAudioGraphFile> File = new CAudioGraphFile();
+
+	hr = File->Initialize(m_Callback, Filename);
+
+	if (FAILED(hr)) {
+		*ppAudioGraphFile = nullptr;
+		m_Callback->OnObjectFailure(FILENAME, __LINE__, hr);
+		return;
+	}
+
+	*ppAudioGraphFile = File;
 }
 
 /* Creates a blank audio graph. */
-VOID CAudioGraphFactory::CreateAudioGraph(LPCWSTR Style, IAudioGraph** ppAudioGraph) {
+VOID CAudioGraphFactory::CreateAudioGraph(LPCSTR Style, IAudioGraph** ppAudioGraph) {
+	HRESULT hr = S_OK;
 
+	CComPtr<CAudioGraph> Graph = new CAudioGraph();
+
+	hr = Graph->Initialize(m_Callback, Style);
+
+	if (FAILED(hr)) {
+		*ppAudioGraph = nullptr;
+		m_Callback->OnObjectFailure(FILENAME, __LINE__, hr);
+		return;
+	}
+
+	*ppAudioGraph = Graph;
 }
