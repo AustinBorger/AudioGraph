@@ -57,34 +57,6 @@ public:
 		return m_RefCount;
 	}
 
-	HRESULT Initialize (
-		IAudioGraphCallback* pCallback,
-		CAudioGraphFile* pFile,
-		CAudioGraph* pGraph,
-		LPCSTR Style
-	);
-
-private:
-	long m_RefCount;
-
-	CComPtr<CAudioGraph> m_Graph;
-	CComPtr<CAudioGraphFile> m_File;
-	CComPtr<CAudioGraphNode> m_From;
-	CComPtr<CAudioGraphNode> m_To;
-	CComPtr<IAudioGraphCallback> m_Callback;
-
-	std::string m_ID;
-	std::string m_Trigger;
-	std::string m_StyleString;
-
-	//IUnknown methods
-
-	STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject) final {
-		QUERY_INTERFACE_CAST(IAudioGraphEdge);
-		QUERY_INTERFACE_CAST(IUnknown);
-		QUERY_INTERFACE_FAIL();
-	}
-
 	//IAudioGraphEdge methods
 
 	/* Returns the ID of this particular edge. */
@@ -113,4 +85,34 @@ private:
 
 	/* Retrieves the audio graph file that this edge is associated with, if there is one. */
 	VOID STDMETHODCALLTYPE GetAudioGraphFile(IAudioGraphFile** ppAudioGraphFile) final;
+
+	//New methods
+
+	HRESULT Initialize (
+		IAudioGraphCallback* pCallback,
+		CAudioGraphFile* pFile,
+		CAudioGraph* pGraph,
+		LPCSTR Style
+	);
+
+private:
+	long m_RefCount;
+
+	CComPtr<CAudioGraph> m_Graph;
+	CComPtr<CAudioGraphFile> m_File;
+	CComPtr<CAudioGraphNode> m_From;
+	CComPtr<CAudioGraphNode> m_To;
+	CComPtr<IAudioGraphCallback> m_Callback;
+
+	std::string m_ID;
+	std::string m_Trigger;
+	std::string m_StyleString;
+
+	//IUnknown methods
+
+	STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject) final {
+		QUERY_INTERFACE_CAST(IAudioGraphEdge);
+		QUERY_INTERFACE_CAST(IUnknown);
+		QUERY_INTERFACE_FAIL();
+	}
 };

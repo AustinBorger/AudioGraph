@@ -59,39 +59,6 @@ public:
 		return m_RefCount;
 	}
 
-	//New methods
-
-	HRESULT Initialize(IAudioGraphCallback* pAudioGraphCallback, LPCSTR Style, CAudioGraphFile* pAudioGraphFile);
-
-	/* To be used by CAudioGraphFile when parsing. */
-	VOID CreateNode(LPCSTR Style);
-
-	/* To be used by CAudioGraphFile when parsing. */
-	VOID CreateEdge(LPCSTR Style);
-
-private:
-	long m_RefCount;
-
-	CComPtr<IAudioGraphCallback> m_Callback;
-	CComPtr<CAudioGraphFile> m_File;
-
-	std::string m_ID;
-	std::string m_Type;
-	std::string m_StyleString;
-
-	std::vector<CComPtr<CAudioGraphNode>> m_NodeEnum;
-	std::map<std::string, CComPtr<CAudioGraphNode>> m_NodeMap;
-	std::vector<CComPtr<CAudioGraphEdge>> m_EdgeEnum;
-	std::map<std::string, CComPtr<CAudioGraphEdge>> m_EdgeMap;
-
-	//IUnknown methods
-
-	STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject) final {
-		QUERY_INTERFACE_CAST(IAudioGraph);
-		QUERY_INTERFACE_CAST(IUnknown);
-		QUERY_INTERFACE_FAIL();
-	}
-
 	//IAudioGraph methods
 
 	/* Returns the ID of this particular graph. */
@@ -133,4 +100,37 @@ private:
 
 	/* Retrieves the audio graph file that this graph is associated with, if there is one. */
 	VOID STDMETHODCALLTYPE GetAudioGraphFile(IAudioGraphFile** ppAudioGraphFile) final;
+
+	//New methods
+
+	HRESULT Initialize(IAudioGraphCallback* pAudioGraphCallback, LPCSTR Style, CAudioGraphFile* pAudioGraphFile);
+
+	/* To be used by CAudioGraphFile when parsing. */
+	VOID CreateNode(LPCSTR Style);
+
+	/* To be used by CAudioGraphFile when parsing. */
+	VOID CreateEdge(LPCSTR Style);
+
+private:
+	long m_RefCount;
+
+	CComPtr<IAudioGraphCallback> m_Callback;
+	CComPtr<CAudioGraphFile> m_File;
+
+	std::string m_ID;
+	std::string m_Type;
+	std::string m_StyleString;
+
+	std::vector<CComPtr<CAudioGraphNode>> m_NodeEnum;
+	std::map<std::string, CComPtr<CAudioGraphNode>> m_NodeMap;
+	std::vector<CComPtr<CAudioGraphEdge>> m_EdgeEnum;
+	std::map<std::string, CComPtr<CAudioGraphEdge>> m_EdgeMap;
+
+	//IUnknown methods
+
+	STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject) final {
+		QUERY_INTERFACE_CAST(IAudioGraph);
+		QUERY_INTERFACE_CAST(IUnknown);
+		QUERY_INTERFACE_FAIL();
+	}
 };

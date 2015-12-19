@@ -55,6 +55,14 @@ public:
 		return m_RefCount;
 	}
 
+	//IAudioGraphFactory methods
+
+	/* Parses an XML file defining a set of audio graphs. */
+	VOID STDMETHODCALLTYPE ParseAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) final;
+
+	/* Places an audio graph in the playback queue. */
+	VOID STDMETHODCALLTYPE QueueAudioGraph(IAudioGraph* pAudioGraph) final;
+
 	//New methods
 
 	HRESULT Initialize(IAudioGraphCallback* pAudioGraphCallback);
@@ -76,12 +84,4 @@ private:
 		QUERY_INTERFACE_CAST(IUnknown);
 		QUERY_INTERFACE_FAIL();
 	}
-
-	//IAudioGraphFactory methods
-
-	/* Parses an XML file defining a set of audio graphs. */
-	VOID STDMETHODCALLTYPE ParseAudioGraphFile(LPCWSTR Filename, IAudioGraphFile** ppAudioGraphFile) final;
-
-	/* Places an audio graph in the playback queue. */
-	VOID STDMETHODCALLTYPE QueueAudioGraph(IAudioGraph* pAudioGraph) final;
 };

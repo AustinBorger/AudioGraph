@@ -54,6 +54,14 @@ public:
 		return m_RefCount;
 	}
 
+	//IDXAudioWriteCallback methods
+
+	VOID STDMETHODCALLTYPE OnObjectFailure(LPCWSTR File, UINT Line, HRESULT hr) final;
+
+	VOID STDMETHODCALLTYPE OnProcess(FLOAT SampleRate, FLOAT* OutputBuffer, UINT BufferFrames) final;
+
+	VOID STDMETHODCALLTYPE OnThreadInit() final;
+
 	//New methods
 
 	HRESULT Initialize(IAudioGraphCallback* pAudioGraphCallback);
@@ -74,12 +82,4 @@ private:
 		QUERY_INTERFACE_CAST(IUnknown);
 		QUERY_INTERFACE_FAIL();
 	}
-
-	//IDXAudioWriteCallback methods
-
-	VOID STDMETHODCALLTYPE OnObjectFailure(LPCWSTR File, UINT Line, HRESULT hr) final;
-
-	VOID STDMETHODCALLTYPE OnProcess(FLOAT SampleRate, FLOAT* OutputBuffer, UINT BufferFrames) final;
-
-	VOID STDMETHODCALLTYPE OnThreadInit() final;
 };

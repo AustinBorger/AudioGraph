@@ -59,7 +59,7 @@ VOID CAudioGraph::CreateNode(LPCSTR Style) {
 
 	if (SUCCEEDED(hr)) {
 		m_NodeEnum.push_back(Node);
-		m_NodeMap[((IAudioGraphNode*)(Node))->GetID()] = Node;
+		m_NodeMap[Node->GetID()] = Node;
 	}
 }
 
@@ -77,7 +77,7 @@ VOID CAudioGraph::CreateEdge(LPCSTR Style) {
 
 	if (SUCCEEDED(hr)) {
 		m_EdgeEnum.push_back(Edge);
-		m_EdgeMap[((IAudioGraphEdge*)(Edge))->GetID()] = Edge;
+		m_EdgeMap[Edge->GetID()] = Edge;
 	}
 }
 
