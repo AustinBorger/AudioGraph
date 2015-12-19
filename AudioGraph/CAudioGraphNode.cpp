@@ -33,13 +33,13 @@ CAudioGraphNode::~CAudioGraphNode() { }
 
 HRESULT CAudioGraphNode::Initialize (
 	IAudioGraphCallback* pCallback,
-	CAudioGraph* pGraph,
 	CAudioGraphFile* pFile,
+	CAudioGraph* pGraph,
 	LPCSTR Style
 ) {
 	m_Callback = pCallback;
-	m_Graph = pGraph;
 	m_File = pFile;
+	m_Graph = pGraph;
 
 	// Parse style string
 

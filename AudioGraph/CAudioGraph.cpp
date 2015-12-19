@@ -45,6 +45,42 @@ HRESULT CAudioGraph::Initialize(IAudioGraphCallback* pAudioGraphCallback, LPCSTR
 	return S_OK;
 }
 
+VOID CAudioGraph::CreateNode(LPCSTR Style) {
+	HRESULT hr = S_OK;
+
+	CComPtr<CAudioGraphNode> Node = new CAudioGraphNode();
+
+	hr = Node->Initialize (
+		m_Callback,
+		m_File,
+		this,
+		Style
+	);
+
+	if (SUCCEEDED(hr)) {
+		m_NodeEnum.push_back(Node);
+		m_NodeMap[((IAudioGraphNode*)(Node))->GetID()] = Node;
+	}
+}
+
+VOID CAudioGraph::CreateEdge(LPCSTR Style) {
+	HRESULT hr = S_OK;
+
+	CComPtr<CAudioGraphEdge> Edge = new CAudioGraphEdge();
+
+	hr = Edge->Initialize (
+		m_Callback,
+		m_File,
+		this,
+		Style
+	);
+
+	if (SUCCEEDED(hr)) {
+		m_EdgeEnum.push_back(Edge);
+		m_EdgeMap[((IAudioGraphEdge*)(Edge))->GetID()] = Edge;
+	}
+}
+
 VOID CAudioGraph::EnumNode(UINT NodeNum, IAudioGraphNode** ppNode) {
 	if (ppNode == nullptr) {
 		m_Callback->OnObjectFailure(FILENAME, __LINE__, E_POINTER);

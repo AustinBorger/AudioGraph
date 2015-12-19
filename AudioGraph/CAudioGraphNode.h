@@ -61,8 +61,8 @@ public:
 
 	HRESULT Initialize (
 		IAudioGraphCallback* pCallback,
-		CAudioGraph* pGraph,
 		CAudioGraphFile* pFile,
+		CAudioGraph* pGraph,
 		LPCSTR Style
 	);
 

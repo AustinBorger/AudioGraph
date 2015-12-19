@@ -1,14 +1,10 @@
-﻿  CDXAudioWriteCallback.cpp
+﻿  CAudioGraphNode.cpp
+  CAudioGraph.cpp
+  Generating Code...
+  Skipping... (no relevant changes detected)
   CAudioGraphFile.cpp
   CAudioGraphFactory.cpp
   CAudioGraphEdge.cpp
-  CAudioGraph.cpp
-  Generating Code...
-  Compiling...
-  CAudioGraphNode.cpp
-  AudioGraph.cpp
-  Generating Code...
      Creating library C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.lib and object C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.exp
-CAudioGraphFile.obj : error LNK2019: unresolved external symbol "public: void __thiscall CAudioGraph::CreateNode(char const *)" (?CreateNode@CAudioGraph@@QAEXPBD@Z) referenced in function "public: void __thiscall CAudioGraphFile::Parse(void)" (?Parse@CAudioGraphFile@@QAEXXZ)
-CAudioGraphFile.obj : error LNK2019: unresolved external symbol "public: void __thiscall CAudioGraph::CreateEdge(char const *)" (?CreateEdge@CAudioGraph@@QAEXPBD@Z) referenced in function "public: void __thiscall CAudioGraphFile::Parse(void)" (?Parse@CAudioGraphFile@@QAEXXZ)
-C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.dll : fatal error LNK1120: 2 unresolved externals
+  AudioGraph.vcxproj -> C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.dll
+  AudioGraph.vcxproj -> C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.pdb (Partial PDB)
