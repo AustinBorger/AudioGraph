@@ -26,9 +26,13 @@
 #include <atlbase.h>
 #include <Windows.h>
 #include <queue>
+#include <map>
+#include <mfapi.h>
+#include <mfreadwrite.h>
 
 #include "DXAudio.h"
 #include "AudioGraph.h"
+#include "CAudioGraph.h"
 #include "QueryInterface.h"
 
 class CDXAudioWriteCallback : public IDXAudioWriteCallback {
@@ -72,7 +76,8 @@ private:
 	long m_RefCount;
 
 	CComPtr<IAudioGraphCallback> m_Callback;
-	std::queue<CComPtr<IAudioGraph>> m_PlaybackQueue;
+	std::queue<CComPtr<CAudioGraph>> m_PlaybackQueue;
+	std::map<std::string, CComPtr<IMFSourceReader>> m_AudioFileMap;
 
 	//IUnknown methods
 

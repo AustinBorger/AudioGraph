@@ -98,6 +98,9 @@ public:
 	/* Retrieves an edge based on a given edge identifier. */
 	VOID STDMETHODCALLTYPE GetEdgeByID(LPCSTR ID, IAudioGraphEdge** ppEdge) final;
 
+	/* Retrieves the currently active node. */
+	VOID STDMETHODCALLTYPE GetCurrentNode(IAudioGraphNode** ppAudioGraphNode) final;
+
 	/* Retrieves the audio graph file that this graph is associated with, if there is one. */
 	VOID STDMETHODCALLTYPE GetAudioGraphFile(IAudioGraphFile** ppAudioGraphFile) final;
 
@@ -118,15 +121,27 @@ public:
 	/* To be used by CAudioGraphEdge. */
 	VOID GetNodeByID(std::string& ID, CAudioGraphNode** ppNode);
 
+	/* Used by CDXAudioWriteCallback. */
+	bool IsPlaying() {
+		return m_Playing;
+	}
+
+	/* Used by CDXAudioWriteCallback. */
+	VOID SetPlaying(bool Playing) {
+		m_Playing = Playing;
+	}
+
 private:
 	long m_RefCount;
 
 	CComPtr<IAudioGraphCallback> m_Callback;
 	CComPtr<CAudioGraphFile> m_File;
+	CComPtr<CAudioGraphNode> m_CurrentNode;
 
 	std::string m_ID;
 	std::string m_Type;
 	std::string m_StyleString;
+	bool m_Playing;
 
 	std::vector<CComPtr<CAudioGraphNode>> m_NodeEnum;
 	std::map<std::string, CComPtr<CAudioGraphNode>> m_NodeMap;

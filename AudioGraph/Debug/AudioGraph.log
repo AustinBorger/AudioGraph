@@ -1,15 +1,4 @@
-﻿  CAudioGraphNode.cpp
-  CAudioGraphFile.cpp
-  CAudioGraphEdge.cpp
-  CAudioGraph.cpp
-  Generating Code...
-  Compiling...
-  CAudioGraphFactory.cpp
-  Generating Code...
-  Compiling...
-  CDXAudioWriteCallback.cpp
-  AudioGraph.cpp
-  Generating Code...
+﻿  CDXAudioWriteCallback.cpp
      Creating library C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.lib and object C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.exp
   AudioGraph.vcxproj -> C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.dll
   AudioGraph.vcxproj -> C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.pdb (Partial PDB)

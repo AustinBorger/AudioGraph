@@ -22,9 +22,17 @@
 
 #include "CDXAudioWriteCallback.h"
 
+#pragma comment(lib, "mfplat.lib")
+#pragma comment(lib, "mfreadwrite.lib")
+
+#define FILENAME L"CDXAudioWriteCallback.cpp"
+#define CHECK_HR(Line) if (FAILED(hr)) { m_Callback->OnObjectFailure(FILENAME, Line, hr); return; }
+
 CDXAudioWriteCallback::CDXAudioWriteCallback() : m_RefCount(1) { }
 
-CDXAudioWriteCallback::~CDXAudioWriteCallback() { }
+CDXAudioWriteCallback::~CDXAudioWriteCallback() { 
+	MFShutdown();
+}
 
 HRESULT CDXAudioWriteCallback::Initialize(IAudioGraphCallback* pAudioGraphCallback) {
 	m_Callback = pAudioGraphCallback;
@@ -33,7 +41,7 @@ HRESULT CDXAudioWriteCallback::Initialize(IAudioGraphCallback* pAudioGraphCallba
 }
 
 VOID CDXAudioWriteCallback::QueueAudioGraph(IAudioGraph* pAudioGraph) {
-	m_PlaybackQueue.push(pAudioGraph);
+	m_PlaybackQueue.push((CAudioGraph*)(pAudioGraph));
 }
 
 VOID CDXAudioWriteCallback::OnObjectFailure(LPCWSTR File, UINT Line, HRESULT hr) {
@@ -41,9 +49,51 @@ VOID CDXAudioWriteCallback::OnObjectFailure(LPCWSTR File, UINT Line, HRESULT hr)
 }
 
 VOID CDXAudioWriteCallback::OnProcess(FLOAT SampleRate, FLOAT* OutputBuffer, UINT BufferFrames) {
+	HRESULT hr = S_OK;
 
+	if (!m_PlaybackQueue.empty()) {
+		CComPtr<CAudioGraph> Graph = m_PlaybackQueue.back();
+
+		// If graph isn't currently active, activate it
+		if (!Graph->IsPlaying()) {
+			m_AudioFileMap.clear();
+
+			UINT NumNodes = Graph->GetNumNodes();
+
+			// Create an IMFSourceReader for every file in the graph
+			for (UINT i = 0; i < NumNodes; i++) {
+				CComPtr<IAudioGraphNode> Node = nullptr;
+				Graph->EnumNode(i, &Node);
+
+				LPCSTR Filename = Node->GetAudioFilename();
+				int Length = strlen(Filename);
+
+				if (m_AudioFileMap[Filename] == nullptr) {
+					// Source: http://stackoverflow.com/questions/10737644/convert-const-char-to-wstring
+
+					int size_needed = MultiByteToWideChar(CP_UTF8, 0, Filename, Length, NULL, 0);
+					std::wstring wFilename(size_needed, 0);
+					MultiByteToWideChar(CP_UTF8, 0, Filename, Length, &wFilename[0], size_needed);
+
+					hr = MFCreateSourceReaderFromURL (
+						wFilename.c_str(),
+						nullptr,
+						&m_AudioFileMap[Filename]
+					); CHECK_HR(__LINE__);
+				}
+			}
+
+			Graph->SetPlaying(true);
+		}
+	} else {
+		ZeroMemory(OutputBuffer, BufferFrames * sizeof(FLOAT) * 2);
+	}
 }
 
 VOID CDXAudioWriteCallback::OnThreadInit() {
+	HRESULT hr = S_OK;
 
+	hr = MFStartup (
+		MF_VERSION
+	); CHECK_HR(__LINE__);
 }

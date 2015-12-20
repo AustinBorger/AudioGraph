@@ -25,7 +25,6 @@
 
 #define FILENAME L"CAudioGraphFactory.cpp"
 #define RETURN_HR(Line) if (FAILED(hr)) return hr
-#define CHECK_HR(Line) if (FAILED(hr)) { m_Callback->OnObjectFailure(FILENAME, Line, hr); return hr; }
 
 CAudioGraphFactory::CAudioGraphFactory() : m_RefCount(1) { }
 

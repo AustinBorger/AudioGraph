@@ -27,7 +27,10 @@
 
 #define FILENAME L"CAudioGraph.cpp"
 
-CAudioGraph::CAudioGraph() : m_RefCount(1) { }
+CAudioGraph::CAudioGraph() : 
+	m_RefCount(1),
+	m_Playing(false)
+{ }
 
 CAudioGraph::~CAudioGraph() { }
 
@@ -169,6 +172,15 @@ VOID CAudioGraph::GetEdgeByID(LPCSTR ID, IAudioGraphEdge** ppEdge) {
 		m_Callback->OnObjectFailure(FILENAME, __LINE__, E_INVALIDARG);
 		return;
 	}
+}
+
+VOID CAudioGraph::GetCurrentNode(IAudioGraphNode** ppAudioGraphNode) {
+	if (ppAudioGraphNode == nullptr) {
+		m_Callback->OnObjectFailure(FILENAME, __LINE__, E_POINTER);
+		return;
+	}
+
+	*ppAudioGraphNode = m_CurrentNode;
 }
 
 VOID CAudioGraph::GetAudioGraphFile(IAudioGraphFile** ppAudioGraphFile) {

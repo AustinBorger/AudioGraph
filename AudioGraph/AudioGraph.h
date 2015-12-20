@@ -141,6 +141,9 @@ struct __declspec(uuid("b1f2bb1c-f1da-4f0a-ba3a-b7dbe2a7c824")) IAudioGraph : pu
 	/* Retrieves an edge based on a given edge identifier. */
 	virtual VOID STDMETHODCALLTYPE GetEdgeByID(LPCSTR ID, IAudioGraphEdge** ppEdge) PURE;
 
+	/* Retrieves the currently active node. */
+	virtual VOID STDMETHODCALLTYPE GetCurrentNode(IAudioGraphNode** ppAudioGraphNode) PURE;
+
 	/* Retrieves the audio graph file that this graph is associated with, if there is one. */
 	virtual VOID STDMETHODCALLTYPE GetAudioGraphFile(IAudioGraphFile** ppAudioGraphFile) PURE;
 };
