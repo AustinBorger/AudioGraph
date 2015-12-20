@@ -96,6 +96,9 @@ struct __declspec(uuid("b8fd4cc2-4360-4701-bb1c-8715fd77d38e")) IAudioGraphNode 
 	/* Returns the duration this node will play for, in seconds. */
 	virtual FLOAT STDMETHODCALLTYPE GetTimeDuration() PURE;
 
+	/* Returns a bool indicating whether or not the node is a terminal node. */
+	virtual BOOL STDMETHODCALLTYPE IsTerminal() PURE;
+
 	/* Returns the number of edges extending from this particular node. */
 	virtual UINT STDMETHODCALLTYPE GetNumEdges() PURE;
 

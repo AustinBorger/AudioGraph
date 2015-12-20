@@ -26,8 +26,10 @@
 #include "CAudioGraphEdge.h"
 
 #include <algorithm>
+#include <propvarutil.h>
 
 #define FILENAME L"CAudioGraphNode.cpp"
+#define CHECK_HR(Line) if (FAILED(hr)) { m_Callback->OnObjectFailure(FILENAME, Line, hr); return; }
 
 CAudioGraphNode::CAudioGraphNode() : m_RefCount(1) { }
 
@@ -58,9 +60,19 @@ HRESULT CAudioGraphNode::Initialize (
 	m_AudioFilename = attribute("filename");
 	std::string sampleOffsetString = attribute("offset");
 	std::string sampleDurationString = attribute("duration");
+	std::string terminalString = attribute("terminal");
 
-	// All attributes must be defined.
+	// All of these attributes must be defined.
 	if (m_ID == "" || m_AudioFilename == "" || sampleOffsetString == "" || sampleDurationString == "") {
+		return E_INVALIDARG;
+	}
+
+	// Terminal does not need to be defined, but if defined must have a valid value
+	if (terminalString == "" || terminalString == "false") {
+		m_IsTerminal = false;
+	} else if (terminalString == "true") {
+		m_IsTerminal = true;
+	} else {
 		return E_INVALIDARG;
 	}
 
@@ -72,6 +84,60 @@ HRESULT CAudioGraphNode::Initialize (
 	}
 
 	return S_OK;
+}
+
+VOID CAudioGraphNode::Setup(IMFMediaType* pMediaType) {
+	HRESULT hr = S_OK;
+
+	// Source: http://stackoverflow.com/questions/10737644/convert-const-char-to-wstring
+
+	int size_needed = MultiByteToWideChar(CP_UTF8, 0, m_AudioFilename.c_str(), m_AudioFilename.size(), NULL, 0);
+	std::wstring wFilename(size_needed, 0);
+	MultiByteToWideChar(CP_UTF8, 0, m_AudioFilename.c_str(), m_AudioFilename.size(), &wFilename[0], size_needed);
+
+	hr = MFCreateSourceReaderFromURL (
+		wFilename.c_str(),
+		nullptr,
+		&m_Reader
+	); CHECK_HR(__LINE__);
+
+	hr = m_Reader->SetStreamSelection (
+		MF_SOURCE_READER_ALL_STREAMS,
+		FALSE
+	); CHECK_HR(__LINE__);
+
+	hr = m_Reader->SetStreamSelection (
+		MF_SOURCE_READER_FIRST_AUDIO_STREAM,
+		TRUE
+	); CHECK_HR(__LINE__);
+
+	hr = m_Reader->SetCurrentMediaType (
+		MF_SOURCE_READER_FIRST_AUDIO_STREAM,
+		NULL,
+		pMediaType
+	); CHECK_HR(__LINE__);
+
+	hr = m_Reader->GetCurrentMediaType (
+		MF_SOURCE_READER_FIRST_AUDIO_STREAM,
+		&m_MediaType
+	); CHECK_HR(__LINE__);
+
+	// MSDN Example says to call this again:
+	// https://msdn.microsoft.com/en-us/library/windows/desktop/dd757929(v=vs.85).aspx
+	hr = m_Reader->SetStreamSelection (
+		MF_SOURCE_READER_FIRST_AUDIO_STREAM,
+		TRUE
+	); CHECK_HR(__LINE__);
+}
+
+VOID CAudioGraphNode::Flush() {
+	m_Sample.Release();
+	m_Reader.Release();
+	m_MediaType.Release();
+}
+
+UINT CAudioGraphNode::Process(FLOAT* OutputBuffer, UINT BufferFrames) {
+	return BufferFrames;
 }
 
 VOID CAudioGraphNode::EnumEdge(UINT EdgeNum, IAudioGraphEdge** ppEdge) {
@@ -122,4 +188,54 @@ VOID CAudioGraphNode::GetAudioGraphFile(IAudioGraphFile** ppAudioGraphFile) {
 	}
 
 	*ppAudioGraphFile = m_File;
+}
+
+VOID CAudioGraphNode::Seek() {
+	HRESULT hr = S_OK;
+	DWORD dwFlags = 0;
+	LONGLONG SampleTime = 0;
+	LONGLONG SampleDuration = 0;
+	LONGLONG DesiredTime = (LONGLONG)(GetTimeOffset() * 1.0E7); //100-nanosecond units
+	PROPVARIANT prop;
+
+	hr = InitPropVariantFromInt64 (
+		DesiredTime,
+		&prop
+	); CHECK_HR(__LINE__);
+
+	hr = m_Reader->SetCurrentPosition (
+		GUID_NULL,
+		prop
+	); CHECK_HR(__LINE__);
+
+	hr = PropVariantClear (
+		&prop
+	); CHECK_HR(__LINE__);
+
+	while (SampleTime + SampleDuration < DesiredTime) {
+		m_Reader->ReadSample (
+			MF_SOURCE_READER_FIRST_AUDIO_STREAM,
+			NULL,
+			NULL,
+			&dwFlags,
+			NULL,
+			&m_Sample
+		); CHECK_HR(__LINE__);
+
+		hr = m_Sample->GetSampleTime (
+			&SampleTime
+		); CHECK_HR(__LINE__);
+
+		m_Sample->GetSampleDuration (
+			&SampleDuration
+		); CHECK_HR(__LINE__);
+	}
+}
+
+VOID CAudioGraphNode::GetTransitionEdge(std::string& TransitionString, CAudioGraphEdge** ppAudioGraphEdge) {
+	try {
+		*ppAudioGraphEdge = m_TransitionMap.at(TransitionString);
+	} catch (...) {
+		*ppAudioGraphEdge = nullptr;
+	}
 }

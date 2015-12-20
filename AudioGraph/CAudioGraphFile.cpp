@@ -123,9 +123,10 @@ VOID CAudioGraphFile::Parse() {
 	for (xml_node<>* graph_node = root_node->first_node("Graph"); graph_node; graph_node = graph_node->next_sibling()) {
 		style_string = "";
 
-		// Graph attributes: id, type
+		// Graph attributes: id, type, initial
 		attribute(graph_node, "id");
 		attribute(graph_node, "type");
+		attribute(graph_node, "initial");
 
 		CComPtr<CAudioGraph> Graph = new CAudioGraph();
 
@@ -146,6 +147,7 @@ VOID CAudioGraphFile::Parse() {
 			attribute(vertex_node, "filename");
 			attribute(vertex_node, "offset");
 			attribute(vertex_node, "duration");
+			attribute(vertex_node, "terminal");
 
 			Graph->CreateNode(style_string);
 		}

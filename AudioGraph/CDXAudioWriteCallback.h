@@ -27,8 +27,6 @@
 #include <Windows.h>
 #include <queue>
 #include <map>
-#include <mfapi.h>
-#include <mfreadwrite.h>
 
 #include "DXAudio.h"
 #include "AudioGraph.h"
@@ -77,7 +75,7 @@ private:
 
 	CComPtr<IAudioGraphCallback> m_Callback;
 	std::queue<CComPtr<CAudioGraph>> m_PlaybackQueue;
-	std::map<std::string, CComPtr<IMFSourceReader>> m_AudioFileMap;
+	CComPtr<IMFMediaType> m_MediaType;
 
 	//IUnknown methods
 

@@ -57,9 +57,10 @@ HRESULT CAudioGraph::Initialize (
 
 	m_ID = attribute("id");
 	m_Type = attribute("type");
+	m_Initial = attribute("initial");
 
-	// ID must be defined, but type is optional.
-	if (m_ID == "") {
+	// id and initial must be defined, but type is optional.
+	if (m_ID == "" || m_Initial == "") {
 		return E_INVALIDARG;
 	}
 
@@ -108,6 +109,57 @@ VOID CAudioGraph::GetNodeByID(std::string& ID, CAudioGraphNode** ppNode) {
 	} catch (...) {
 		*ppNode = nullptr;
 	}
+}
+
+VOID CAudioGraph::Setup(IMFMediaType* pMediaType) {
+	for (auto Node : m_NodeEnum) {
+		Node->Setup(pMediaType);
+	}
+
+	m_CurrentNode = m_NodeMap[m_Initial];
+	m_CurrentNode->Seek();
+}
+
+VOID CAudioGraph::Flush() {
+	for (auto Node : m_NodeEnum) {
+		Node->Flush();
+	}
+
+	m_CurrentNode.Release();
+	m_CurrentNode = nullptr;
+}
+
+UINT CAudioGraph::Process(FLOAT* OutputBuffer, UINT BufferFrames) {
+	UINT Written = 0;
+	UINT TotalWritten = 0;
+	bool done = false;
+
+	while (BufferFrames > 0 && !done) {
+		Written = m_CurrentNode->Process(OutputBuffer, BufferFrames);
+		BufferFrames -= Written;
+		OutputBuffer += Written * 2;
+		TotalWritten += Written;
+
+		// Node has finished playing
+		if (BufferFrames > 0) {
+			if (m_CurrentNode->IsTerminal() == FALSE) { // Move to the next node
+				std::string TransitionString = m_Callback->OnTransition(this, m_CurrentNode);
+				CComPtr<CAudioGraphEdge> TransitionEdge;
+				m_CurrentNode->GetTransitionEdge(TransitionString, &TransitionEdge);
+
+				if (TransitionEdge != nullptr) {
+					m_CurrentNode.Release();
+					TransitionEdge->GetTo((IAudioGraphNode**)(&m_CurrentNode));
+				} else { // just replay the same node
+					m_CurrentNode->Seek();
+				}
+			} else { // Node is a terminal, stop playing this graph.
+				done = true;
+			}
+		}
+	}
+
+	return TotalWritten;
 }
 
 VOID CAudioGraph::EnumNode(UINT NodeNum, IAudioGraphNode** ppNode) {

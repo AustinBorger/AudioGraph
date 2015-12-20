@@ -28,6 +28,9 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <mfapi.h>
+#include <mfidl.h>
+#include <mfreadwrite.h>
 
 #include "AudioGraph.h"
 #include "QueryInterface.h"
@@ -74,6 +77,11 @@ public:
 	/* Returns the number of edges extending from this particular node. */
 	UINT STDMETHODCALLTYPE GetNumEdges() final {
 		return m_EdgeEnum.size();
+	}
+
+	/* Returns a bool indicating whether or not the node is a terminal node. */
+	BOOL STDMETHODCALLTYPE IsTerminal() final {
+		return m_IsTerminal;
 	}
 
 	/* Retrieves an edge extending from this node by given array index. */
@@ -124,21 +132,44 @@ public:
 		std::string& Style
 	);
 
+	/* Prepares the graph for playback by activating its stream reader. */
+	VOID Setup(IMFMediaType* pMediaType);
+
+	/* Closes and releases the stream reader and related objects. */
+	VOID Flush();
+
+	/* Fetches a set of samples.  Returns the number of samples written.
+	** If any value less than BufferFrames is returned, the node has finished
+	** playing. */
+	UINT Process(FLOAT* OutputBuffer, UINT BufferFrames);
+
+	/* Seeks to the start of the node's segment. */
+	VOID Seek();
+
+	/* Retrieves the edge that a particular transition string is associated with.
+	** If none exists, ppAudioGraphEdge is set to nullptr. */
+	VOID GetTransitionEdge(std::string& TransitionString, CAudioGraphEdge** ppAudioGraphEdge);
+
 private:
 	long m_RefCount;
 
 	CComPtr<IAudioGraphCallback> m_Callback;
 	CComPtr<CAudioGraph> m_Graph;
 	CComPtr<CAudioGraphFile> m_File;
+	CComPtr<IMFMediaType> m_MediaType;
+	CComPtr<IMFSourceReader> m_Reader;
+	CComPtr<IMFSample> m_Sample;
 
 	std::string m_ID;
 	std::string m_AudioFilename;
 	std::string m_StyleString;
 	UINT m_SampleOffset;
 	UINT m_SampleDuration;
+	bool m_IsTerminal;
 
 	std::vector<CComPtr<CAudioGraphEdge>> m_EdgeEnum;
-	std::map<std::string, CComPtr<CAudioGraphEdge>> m_EdgeMap;
+	std::map<std::string, CComPtr<CAudioGraphEdge>> m_EdgeMap; //Mapped by ID string
+	std::map<std::string, CComPtr<CAudioGraphEdge>> m_TransitionMap; //Mapped by transition string
 
 	//IUnknown methods
 

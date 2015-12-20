@@ -131,6 +131,17 @@ public:
 		m_Playing = Playing;
 	}
 
+	/* Prepares the graph for playback by creating stream readers. */
+	VOID Setup(IMFMediaType* pMediaType);
+
+	/* Closes all streams. */
+	VOID Flush();
+
+	/* Fetches a set of samples.  Returns the number of samples written.
+	** If any value less than BufferFrames is returned, the graph has finished
+	** playing. */
+	UINT Process(FLOAT* OutputBuffer, UINT BufferFrames);
+
 private:
 	long m_RefCount;
 
@@ -140,6 +151,7 @@ private:
 
 	std::string m_ID;
 	std::string m_Type;
+	std::string m_Initial;
 	std::string m_StyleString;
 	bool m_Playing;
 

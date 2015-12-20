@@ -1,4 +1,2 @@
-﻿  CDXAudioWriteCallback.cpp
-     Creating library C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.lib and object C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.exp
-  AudioGraph.vcxproj -> C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.dll
-  AudioGraph.vcxproj -> C:\Users\Austin\Documents\COM Objects\AudioGraph\Debug\AudioGraph.pdb (Partial PDB)
+﻿  CAudioGraphNode.cpp
+c:\users\austin\documents\com objects\audiograph\audiograph\caudiographnode.cpp : fatal error C1041: cannot open program database 'C:\Users\Austin\Documents\COM Objects\AudioGraph\AudioGraph\Debug\vc140.idb'; if multiple CL.EXE write to the same .PDB file, please use /FS

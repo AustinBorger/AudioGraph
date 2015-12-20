@@ -24,6 +24,7 @@
 
 #pragma comment(lib, "mfplat.lib")
 #pragma comment(lib, "mfreadwrite.lib")
+#pragma comment(lib, "mfuuid.lib")
 
 #define FILENAME L"CDXAudioWriteCallback.cpp"
 #define CHECK_HR(Line) if (FAILED(hr)) { m_Callback->OnObjectFailure(FILENAME, Line, hr); return; }
@@ -50,42 +51,30 @@ VOID CDXAudioWriteCallback::OnObjectFailure(LPCWSTR File, UINT Line, HRESULT hr)
 
 VOID CDXAudioWriteCallback::OnProcess(FLOAT SampleRate, FLOAT* OutputBuffer, UINT BufferFrames) {
 	HRESULT hr = S_OK;
+	UINT Written = 0;
 
-	if (!m_PlaybackQueue.empty()) {
-		CComPtr<CAudioGraph> Graph = m_PlaybackQueue.back();
+	while (BufferFrames > 0 && !m_PlaybackQueue.empty()) {
+		CComPtr<CAudioGraph> Graph = m_PlaybackQueue.front();
 
 		// If graph isn't currently active, activate it
 		if (!Graph->IsPlaying()) {
-			m_AudioFileMap.clear();
-
-			UINT NumNodes = Graph->GetNumNodes();
-
-			// Create an IMFSourceReader for every file in the graph
-			for (UINT i = 0; i < NumNodes; i++) {
-				CComPtr<IAudioGraphNode> Node = nullptr;
-				Graph->EnumNode(i, &Node);
-
-				LPCSTR Filename = Node->GetAudioFilename();
-				int Length = strlen(Filename);
-
-				if (m_AudioFileMap[Filename] == nullptr) {
-					// Source: http://stackoverflow.com/questions/10737644/convert-const-char-to-wstring
-
-					int size_needed = MultiByteToWideChar(CP_UTF8, 0, Filename, Length, NULL, 0);
-					std::wstring wFilename(size_needed, 0);
-					MultiByteToWideChar(CP_UTF8, 0, Filename, Length, &wFilename[0], size_needed);
-
-					hr = MFCreateSourceReaderFromURL (
-						wFilename.c_str(),
-						nullptr,
-						&m_AudioFileMap[Filename]
-					); CHECK_HR(__LINE__);
-				}
-			}
-
+			Graph->Setup(m_MediaType);
 			Graph->SetPlaying(true);
 		}
-	} else {
+
+		Written = Graph->Process(OutputBuffer, BufferFrames);
+
+		BufferFrames -= Written;
+		OutputBuffer += Written * 2;
+
+		// If graph is done playing, flush its buffers and remove it from the queue.
+		if (BufferFrames > 0) {
+			Graph->Flush();
+			m_PlaybackQueue.pop();
+		}
+	}
+
+	if (BufferFrames > 0) {
 		ZeroMemory(OutputBuffer, BufferFrames * sizeof(FLOAT) * 2);
 	}
 }
@@ -95,5 +84,19 @@ VOID CDXAudioWriteCallback::OnThreadInit() {
 
 	hr = MFStartup (
 		MF_VERSION
+	); CHECK_HR(__LINE__);
+
+	hr = MFCreateMediaType (
+		&m_MediaType
+	); CHECK_HR(__LINE__);
+
+	hr = m_MediaType->SetGUID (
+		MF_MT_MAJOR_TYPE,
+		MFMediaType_Audio
+	); CHECK_HR(__LINE__);
+
+	hr = m_MediaType->SetGUID (
+		MF_MT_SUBTYPE,
+		MFAudioFormat_PCM
 	); CHECK_HR(__LINE__);
 }
