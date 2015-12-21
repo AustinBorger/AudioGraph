@@ -137,7 +137,75 @@ VOID CAudioGraphNode::Flush() {
 }
 
 UINT CAudioGraphNode::Process(FLOAT* OutputBuffer, UINT BufferFrames) {
-	return BufferFrames;
+	HRESULT hr = S_OK;
+	bool done = false;
+	UINT Written = 0;
+
+	while (BufferFrames > 0 && !done) {
+		CComPtr<IMFMediaBuffer> Buffer;
+		DWORD BufferLength = 0;
+		BYTE* pByteBuffer = nullptr;
+		LONGLONG SamplePosition = (LONGLONG)(GetTimePosition() * 1.0E7f);
+		LONGLONG EndPosition = (LONGLONG)((GetTimeOffset() + GetTimeDuration()) * 1.0E7f);
+		LONGLONG SampleTime = 0;
+		LONGLONG SampleDuration = 0;
+		LONGLONG TimeSkip = 0;
+		LONGLONG TimeTruncate = 0;
+		UINT SampleSkip = 0;
+		UINT SampleTruncate = 0;
+		UINT SampleRead = 0;
+
+		hr = m_Sample->GetSampleTime (
+			&SampleTime
+		); CHECK_HR(__LINE__);
+
+		m_Sample->GetSampleDuration (
+			&SampleDuration
+		); CHECK_HR(__LINE__);
+
+		hr = m_Sample->ConvertToContiguousBuffer (
+			&Buffer
+		); CHECK_HR(__LINE__);
+
+		hr = Buffer->GetCurrentLength (
+			&BufferLength
+		); CHECK_HR(__LINE__);
+
+		TimeSkip = SamplePosition - SampleTime;
+		TimeTruncate = (SampleTime + SampleDuration > EndPosition) ? (SampleTime + SampleDuration - EndPosition) : 0;
+		SampleSkip = (UINT)(FLOAT(TimeSkip) / 1.0E7f);
+		SampleTruncate = (UINT)(FLOAT(TimeTruncate) / 1.0E7f);
+		SampleRead = (BufferLength / (sizeof(FLOAT) * 2)) - SampleSkip - SampleTruncate;
+
+		hr = Buffer->Lock (
+			&pByteBuffer,
+			nullptr,
+			nullptr
+		); CHECK_HR(__LINE__);
+
+		pByteBuffer += SampleSkip * sizeof(FLOAT) * 2;
+
+		memcpy_s (
+			OutputBuffer,
+			BufferFrames * sizeof(FLOAT) * 2,
+			pByteBuffer,
+			SampleRead * sizeof(FLOAT) * 2
+		);
+
+		hr = Buffer->Unlock();
+		CHECK_HR(__LINE__);
+
+		OutputBuffer += SampleRead * 2;
+		BufferFrames -= SampleRead;
+		Written += SampleRead;
+		m_SamplePosition += SampleRead;
+
+		if (SampleTruncate > 0) {
+			done = true;
+		}
+	}
+
+	return Written;
 }
 
 VOID CAudioGraphNode::EnumEdge(UINT EdgeNum, IAudioGraphEdge** ppEdge) {
@@ -195,7 +263,7 @@ VOID CAudioGraphNode::Seek() {
 	DWORD dwFlags = 0;
 	LONGLONG SampleTime = 0;
 	LONGLONG SampleDuration = 0;
-	LONGLONG DesiredTime = (LONGLONG)(GetTimeOffset() * 1.0E7); //100-nanosecond units
+	LONGLONG DesiredTime = (LONGLONG)(GetTimeOffset() * 1.0E7f); //100-nanosecond units
 	PROPVARIANT prop;
 
 	hr = InitPropVariantFromInt64 (
@@ -230,6 +298,8 @@ VOID CAudioGraphNode::Seek() {
 			&SampleDuration
 		); CHECK_HR(__LINE__);
 	}
+
+	m_SamplePosition = m_SampleOffset;
 }
 
 VOID CAudioGraphNode::GetTransitionEdge(std::string& TransitionString, CAudioGraphEdge** ppAudioGraphEdge) {

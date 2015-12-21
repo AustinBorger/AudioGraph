@@ -165,6 +165,7 @@ private:
 	std::string m_StyleString;
 	UINT m_SampleOffset;
 	UINT m_SampleDuration;
+	UINT m_SamplePosition;
 	bool m_IsTerminal;
 
 	std::vector<CComPtr<CAudioGraphEdge>> m_EdgeEnum;
@@ -177,5 +178,10 @@ private:
 		QUERY_INTERFACE_CAST(IAudioGraphNode);
 		QUERY_INTERFACE_CAST(IUnknown);
 		QUERY_INTERFACE_FAIL();
+	}
+
+	//New methods
+	FLOAT GetTimePosition() {
+		return FLOAT(m_SamplePosition) / FLOAT(44100);
 	}
 };

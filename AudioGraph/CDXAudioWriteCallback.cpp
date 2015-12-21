@@ -97,6 +97,16 @@ VOID CDXAudioWriteCallback::OnThreadInit() {
 
 	hr = m_MediaType->SetGUID (
 		MF_MT_SUBTYPE,
-		MFAudioFormat_PCM
+		MFAudioFormat_Float
+	); CHECK_HR(__LINE__);
+
+	hr = m_MediaType->SetUINT32 (
+		MF_MT_AUDIO_NUM_CHANNELS,
+		2
+	); CHECK_HR(__LINE__);
+
+	hr = m_MediaType->SetUINT32 (
+		MF_MT_AUDIO_SAMPLES_PER_SECOND,
+		44100
 	); CHECK_HR(__LINE__);
 }
