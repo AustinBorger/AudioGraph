@@ -49,9 +49,12 @@ VOID CDXAudioWriteCallback::OnObjectFailure(LPCWSTR File, UINT Line, HRESULT hr)
 	m_Callback->OnObjectFailure(File, Line, hr);
 }
 
+#include <iostream>
+
 VOID CDXAudioWriteCallback::OnProcess(FLOAT SampleRate, FLOAT* OutputBuffer, UINT BufferFrames) {
 	HRESULT hr = S_OK;
 	UINT Written = 0;
+	UINT Frames = BufferFrames;
 
 	while (BufferFrames > 0 && !m_PlaybackQueue.empty()) {
 		CComPtr<CAudioGraph> Graph = m_PlaybackQueue.front();
@@ -71,6 +74,7 @@ VOID CDXAudioWriteCallback::OnProcess(FLOAT SampleRate, FLOAT* OutputBuffer, UIN
 		if (BufferFrames > 0) {
 			Graph->Flush();
 			m_PlaybackQueue.pop();
+			std::cout << "POP";
 		}
 	}
 
@@ -108,5 +112,25 @@ VOID CDXAudioWriteCallback::OnThreadInit() {
 	hr = m_MediaType->SetUINT32 (
 		MF_MT_AUDIO_SAMPLES_PER_SECOND,
 		44100
+	); CHECK_HR(__LINE__);
+
+	hr = m_MediaType->SetUINT32 (
+		MF_MT_AUDIO_BLOCK_ALIGNMENT,
+		sizeof(FLOAT) * 2
+	); CHECK_HR(__LINE__);
+
+	hr = m_MediaType->SetUINT32 (
+		MF_MT_AUDIO_AVG_BYTES_PER_SECOND,
+		sizeof(FLOAT) * 2 * 44100
+	); CHECK_HR(__LINE__);
+
+	hr = m_MediaType->SetUINT32 (
+		MF_MT_AUDIO_BITS_PER_SAMPLE,
+		sizeof(FLOAT) * 8
+	); CHECK_HR(__LINE__);
+
+	hr = m_MediaType->SetUINT32 (
+		MF_MT_ALL_SAMPLES_INDEPENDENT,
+		TRUE
 	); CHECK_HR(__LINE__);
 }

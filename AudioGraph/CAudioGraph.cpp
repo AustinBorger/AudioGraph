@@ -49,7 +49,7 @@ HRESULT CAudioGraph::Initialize (
 
 	static const auto attribute = [&Style](LPCSTR attribute) {
 		size_t off = Style.find(attribute, 0);
-		size_t start = off + 4;
+		size_t start = off + 4 + strlen(attribute);
 		size_t end = Style.find("\"", start);
 		size_t length = end - start;
 		return Style.substr(start, length);

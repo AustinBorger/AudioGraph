@@ -103,6 +103,7 @@ VOID CAudioGraphFile::Parse() {
 	xml_document<> document;
 	document.parse<0>(content);
 	xml_node<>* root_node = document.first_node("AudioGraph");
+	if (!root_node) return;
 	std::string style_string;
 
 	static const auto attribute = [&style_string](xml_node<>* node, LPCSTR attribute) {

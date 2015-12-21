@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<AudioGraph>
+	<Graph id = "graph" type = "singleton" initial = "node">
+		<Node id = "node" filename = "Be You.mp3" offset = "0" duration = "88100" terminal = "true">
+		</Node>
+	</Graph>
+</AudioGraph>

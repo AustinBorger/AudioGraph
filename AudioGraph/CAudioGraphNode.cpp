@@ -30,6 +30,7 @@
 
 #define FILENAME L"CAudioGraphNode.cpp"
 #define CHECK_HR(Line) if (FAILED(hr)) { m_Callback->OnObjectFailure(FILENAME, Line, hr); return; }
+#define CHECK_HR2(Line) if (FAILED(hr)) { m_Callback->OnObjectFailure(FILENAME, Line, hr); return Written; }
 
 CAudioGraphNode::CAudioGraphNode() : m_RefCount(1) { }
 
@@ -50,7 +51,7 @@ HRESULT CAudioGraphNode::Initialize (
 
 	static const auto attribute = [&Style](LPCSTR attribute) {
 		size_t off = Style.find(attribute, 0);
-		size_t start = off + 4;
+		size_t start = off + 4 + strlen(attribute);
 		size_t end = Style.find("\"", start);
 		size_t length = end - start;
 		return Style.substr(start, length);
@@ -136,12 +137,15 @@ VOID CAudioGraphNode::Flush() {
 	m_MediaType.Release();
 }
 
+#include <iostream>
+
 UINT CAudioGraphNode::Process(FLOAT* OutputBuffer, UINT BufferFrames) {
 	HRESULT hr = S_OK;
 	bool done = false;
 	UINT Written = 0;
+	LONGLONG BufferDuration = (LONGLONG)((FLOAT(BufferFrames) / FLOAT(44100)) * 1.0E7f);
 
-	while (BufferFrames > 0 && !done) {
+	while (BufferFrames > 0 && !done && m_SamplePosition < m_SampleOffset + m_SampleDuration) {
 		CComPtr<IMFMediaBuffer> Buffer;
 		DWORD BufferLength = 0;
 		BYTE* pByteBuffer = nullptr;
@@ -157,31 +161,31 @@ UINT CAudioGraphNode::Process(FLOAT* OutputBuffer, UINT BufferFrames) {
 
 		hr = m_Sample->GetSampleTime (
 			&SampleTime
-		); CHECK_HR(__LINE__);
+		); CHECK_HR2(__LINE__);
 
 		m_Sample->GetSampleDuration (
 			&SampleDuration
-		); CHECK_HR(__LINE__);
+		); CHECK_HR2(__LINE__);
 
 		hr = m_Sample->ConvertToContiguousBuffer (
 			&Buffer
-		); CHECK_HR(__LINE__);
+		); CHECK_HR2(__LINE__);
 
 		hr = Buffer->GetCurrentLength (
 			&BufferLength
-		); CHECK_HR(__LINE__);
+		); CHECK_HR2(__LINE__);
 
 		TimeSkip = SamplePosition - SampleTime;
-		TimeTruncate = (SampleTime + SampleDuration > EndPosition) ? (SampleTime + SampleDuration - EndPosition) : 0;
-		SampleSkip = (UINT)(FLOAT(TimeSkip) / 1.0E7f);
-		SampleTruncate = (UINT)(FLOAT(TimeTruncate) / 1.0E7f);
-		SampleRead = (BufferLength / (sizeof(FLOAT) * 2)) - SampleSkip - SampleTruncate;
+		TimeTruncate = (SamplePosition + BufferDuration > EndPosition) ? (SamplePosition + BufferDuration - EndPosition) : 0;
+		SampleSkip = (TimeSkip / 10000000) * 44100;
+		SampleTruncate = (TimeTruncate / 10000000) * 44100;
+		SampleRead = BufferFrames - SampleTruncate;
 
 		hr = Buffer->Lock (
 			&pByteBuffer,
 			nullptr,
 			nullptr
-		); CHECK_HR(__LINE__);
+		); CHECK_HR2(__LINE__);
 
 		pByteBuffer += SampleSkip * sizeof(FLOAT) * 2;
 
@@ -193,7 +197,7 @@ UINT CAudioGraphNode::Process(FLOAT* OutputBuffer, UINT BufferFrames) {
 		);
 
 		hr = Buffer->Unlock();
-		CHECK_HR(__LINE__);
+		CHECK_HR2(__LINE__);
 
 		OutputBuffer += SampleRead * 2;
 		BufferFrames -= SampleRead;
@@ -202,6 +206,18 @@ UINT CAudioGraphNode::Process(FLOAT* OutputBuffer, UINT BufferFrames) {
 
 		if (SampleTruncate > 0) {
 			done = true;
+		} else if (BufferFrames > 0) {
+			DWORD dwFlags = 0;
+
+			// Read next sample
+			m_Reader->ReadSample (
+				MF_SOURCE_READER_FIRST_AUDIO_STREAM,
+				NULL,
+				NULL,
+				&dwFlags,
+				NULL,
+				&m_Sample
+			); CHECK_HR2(__LINE__);
 		}
 	}
 
@@ -280,7 +296,7 @@ VOID CAudioGraphNode::Seek() {
 		&prop
 	); CHECK_HR(__LINE__);
 
-	while (SampleTime + SampleDuration < DesiredTime) {
+	do {
 		m_Reader->ReadSample (
 			MF_SOURCE_READER_FIRST_AUDIO_STREAM,
 			NULL,
@@ -297,7 +313,7 @@ VOID CAudioGraphNode::Seek() {
 		m_Sample->GetSampleDuration (
 			&SampleDuration
 		); CHECK_HR(__LINE__);
-	}
+	} while (SampleTime + SampleDuration < DesiredTime);
 
 	m_SamplePosition = m_SampleOffset;
 }
